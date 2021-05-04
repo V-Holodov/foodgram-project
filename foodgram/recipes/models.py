@@ -24,7 +24,7 @@ class Recipe(models.Model):
     )
     image = models.ImageField(
         verbose_name='Загрузить фото',
-        upload_to='recipe/',
+        upload_to='recipes/',
         blank=True, null=True
     )
     description = models.TextField(verbose_name='Описание')
@@ -71,7 +71,7 @@ class Ingredient(models.Model):
         verbose_name='Единица измерения',
         max_length=200
     )
-    author = models.ForeignKey(
+    quantity = models.ForeignKey(
         Quantity, on_delete=models.CASCADE,
         related_name="ingredient"
     )
