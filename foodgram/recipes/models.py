@@ -6,9 +6,9 @@ from users.models import User
 
 class Recipe(models.Model):
     """Recipes of dishes"""
-    BREAKFAST = 'B', 'Завтрак'
-    LANCH = 'L', 'Обед'
-    DINNER = 'D', 'Ужин'
+    BREAKFAST = 'B'
+    LANCH = 'L'
+    DINNER = 'D'
     MEALTIME_CHOICES = [
         (BREAKFAST, 'Завтрак'),
         (LANCH, 'Обед'),
@@ -47,6 +47,9 @@ class Recipe(models.Model):
     shoplist = models.ManyToManyField('Shoplist', related_name="recipe")
     favor_recipe = models.ManyToManyField('FavorRecipe', related_name="recipe")
 
+    def __str__(self):
+        return self.name
+
 
 class Quantity(models.Model):
     value = models.IntegerField(
@@ -69,6 +72,9 @@ class Ingredient(models.Model):
         related_name="ingredient"
     )
 
+    def __str__(self):
+        return self.name
+
 
 class ShopList(models.Model):
     """Authorized user's shopping list"""
@@ -82,5 +88,5 @@ class FavorRecipe(models.Model):
     """List of the authorized user's favorite recipes"""
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
-        related_name="shoplist"
+        related_name="favor_recipe"
     )
