@@ -48,6 +48,28 @@ class Recipe(models.Model):
     favor_recipe = models.ManyToManyField('FavorRecipe', related_name="recipe")
 
 
+class Quantity(models.Model):
+    value = models.IntegerField(
+        default=0,
+        verbose_name='Количество ингредиента'
+    )
+
+
+class Ingredient(models.Model):
+    name = models.CharField(
+        verbose_name='Название ингредиента',
+        max_length=200
+    )
+    measure = models.CharField(
+        verbose_name='Единица измерения',
+        max_length=200
+    )
+    author = models.ForeignKey(
+        Quantity, on_delete=models.CASCADE,
+        related_name="ingredient"
+    )
+
+
 class ShopList(models.Model):
     """Authorized user's shopping list"""
     user = models.ForeignKey(
