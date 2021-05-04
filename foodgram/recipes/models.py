@@ -44,8 +44,12 @@ class Recipe(models.Model):
         max_length=70, unique=True
     )
     ingredient = models.ManyToManyField('Ingredient', related_name="recipe")
-    shoplist = models.ManyToManyField('Shoplist', related_name="recipe")
-    favor_recipe = models.ManyToManyField('FavorRecipe', related_name="recipe")
+    shoplist = models.ManyToManyField(
+        'Shoplist', related_name="recipe", blank=True
+        )
+    favor_recipe = models.ManyToManyField(
+        'FavorRecipe', related_name="recipe", blank=True
+        )
 
     def __str__(self):
         return self.name
