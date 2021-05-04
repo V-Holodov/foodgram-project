@@ -5,9 +5,7 @@ User = get_user_model()
 
 
 class Follow(models.Model):
-
-    """the follow system on the author"""
-
+    """Relationship between an authorized user and their following"""
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='follower')
     idol = models.ForeignKey(
