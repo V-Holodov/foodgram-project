@@ -6,4 +6,5 @@ import csv
 class Command(BaseCommand):
     help = 'Load ingredient'
 
-    def handle(self, *args, **kwargs)
+    def handle(self, *args, **kwargs):
+        pass
