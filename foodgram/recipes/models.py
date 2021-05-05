@@ -15,10 +15,6 @@ class Ingredient(models.Model):
         verbose_name='Единица измерения',
         max_length=200
     )
-    # quantity = models.ForeignKey(
-    #     Quantity, on_delete=models.CASCADE,
-    #     related_name="ingredient"
-    # )
 
     def __str__(self):
         return self.name
@@ -51,11 +47,9 @@ class Recipe(models.Model):
     tag = MultiSelectField(
         choices=MEALTIME_CHOICES,
         verbose_name='Теги')
-    cooking_time = models.IntegerField(
+    cooking_time = models.PositiveIntegerField(
         default=0,
         verbose_name='Время приготовления',
-        # validators=(
-        #     MinValueValidator(limit_value=0))
     )
     slug = models.SlugField(
         verbose_name='Слаг',
@@ -63,7 +57,7 @@ class Recipe(models.Model):
                    'латиницу, цифры, дефисы и знаки подчёркивания'),
         max_length=70, unique=True
     )
-    # ingredient = models.ManyToManyField('Ingredient', related_name="recipe")
+    ingredient = models.ManyToManyField(Ingredient, through='IngredientRecipe')
     # shoplist = models.ManyToManyField(
     #     'Shoplist', related_name="recipe", blank=True
     #     )
@@ -75,11 +69,10 @@ class Recipe(models.Model):
         return self.name
 
 
-class Quantity(models.Model):
-    value = models.IntegerField(
-        default=0,
-        verbose_name='Количество ингредиента'
-    )
+class IngredientRecipe(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
 
 
 class ShopList(models.Model):
