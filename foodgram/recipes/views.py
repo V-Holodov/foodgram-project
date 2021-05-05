@@ -1,3 +1,7 @@
 from django.shortcuts import render
+from . import models
 
-# Create your views here.
+
+def index(request):
+    latest = models.Recipe.objects.order_by("-pub_date")[:11]
+    return render(request, "indexAuth.html", {"posts": latest})
