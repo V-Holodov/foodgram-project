@@ -3,5 +3,5 @@ from . import models
 
 
 def index(request):
-    latest = models.Recipe.objects.order_by("-pub_date")[:11]
-    return render(request, "index.html", {"posts": latest})
+    recipes = models.Recipe.objects.all()
+    return render(request, "index.html", {"recipes": recipes})
