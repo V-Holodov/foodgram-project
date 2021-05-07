@@ -21,9 +21,11 @@
     </ul>
 </div>
 <div class="card-list">
-    {% for recipe in recipes %}
+    {% for recipe in page %}
         {% include "cardRecipe.html" with recipe=recipe %}
     {% endfor %}
 </div>
-    {% include "paginator.html" %}
+    {% if page.has_other_pages %}
+        {% include "paginator.html" with items=page paginator=paginator%}
+    {% endif %}
 {% endblock %}

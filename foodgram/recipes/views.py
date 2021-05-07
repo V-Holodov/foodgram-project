@@ -8,4 +8,4 @@ def index(request):
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, "index.html", {"recipes": page})
+    return render(request, "index.html", {"page": page})
