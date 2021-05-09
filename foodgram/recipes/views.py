@@ -13,7 +13,11 @@ def index(request):
 
 def recipe_detail(request, id):
     recipe = get_object_or_404(models.Recipe, id=id)
-    ingredients = recipe.ingredient.all()
+    ingredients = {
+        ingredient: models.IngredientRecipe.objects.get(
+            recipe=recipe,
+            ingredient=ingredient
+            ).quantity for ingredient in recipe.ingredient.all()}
     return render(
         request,
         'recipeDetail.html',
