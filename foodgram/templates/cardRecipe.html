@@ -19,7 +19,7 @@
         </ul>
         <div class="card__items card__items_column">
             <p class="card__text"><span class="icon-time"></span> {{recipe.cooking_time}} мин.</p>
-            <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: black"> {{recipe.author.first_name}} {{recipe.author.last_name}}</a></p>
+            <p class="card__text"><span class="icon-user"></span> <a href="{% url 'author_page' recipe.author.id %}" style="color: black"> {{recipe.author.first_name}} {{recipe.author.last_name}}</a></p>
         </div>
     </div>
     <div class="card__footer">
