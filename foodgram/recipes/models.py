@@ -51,13 +51,16 @@ class Recipe(models.Model):
         default=0,
         verbose_name='Время приготовления',
     )
-    slug = models.SlugField(
-        verbose_name='Слаг',
-        help_text=('Укажите адрес для страницы группы. Используйте только '
-                   'латиницу, цифры, дефисы и знаки подчёркивания'),
-        max_length=70, unique=True
-    )
     ingredient = models.ManyToManyField(Ingredient, through='IngredientRecipe')
+    favor_recipe = models.ManyToManyField(
+        User, through='FavorRecipe', related_name="favorite",
+        )
+    # slug = models.SlugField(
+    #     verbose_name='Слаг',
+    #     help_text=('Укажите адрес для страницы группы. Используйте только '
+    #                'латиницу, цифры, дефисы и знаки подчёркивания'),
+    #     max_length=70, unique=True
+    # )
     # shoplist = models.ManyToManyField(
     #     'Shoplist', related_name="recipe", blank=True
     #     )
@@ -87,7 +90,9 @@ class FavorRecipe(models.Model):
     """List of the authorized user's favorite recipes"""
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
-        related_name="favor_recipe"
+    )
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE,
     )
 
 

@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from . import models
+from recipes import models, forms
 
 User = get_user_model()
 
@@ -68,3 +68,27 @@ def profile_unfollow(request, username):
     follow = Follow.objects.filter(author__username=username, user=user)
     follow.delete()
     return redirect('profile', username=username)
+
+
+@login_required
+def new_recipe(request):
+    """Creating a new recipe by an authorized user"""
+    form = forms.RecipeForm(request.POST or None, files=request.FILES or None)
+    if form.is_valid():
+        new_post = form.save(commit=False)
+        new_post.author = request.user
+        new_post.save()
+        return redirect('index')
+    return render(request, 'new_recipe.html', {'form': form, 'edit': False})
+
+
+@login_required
+def favor_recipes(request):
+    user = request.user
+    latest = models.Recipe.objects.filter(favor_recipe__username=user)
+    paginator = Paginator(latest, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request, "favor_recipes.html", {"page": page, "paginator": paginator}
+        )
