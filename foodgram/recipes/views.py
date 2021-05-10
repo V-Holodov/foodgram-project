@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from . import models
 
 User = get_user_model()
@@ -48,3 +49,22 @@ def follow_list(request):
         "follow.html",
         {"page": page, "paginator": paginator}
         )
+
+
+@login_required
+def profile_follow(request, username):
+    """starts following the author if it is not the user himself"""
+    user = request.user
+    author = User.objects.get(username=username)
+    if author != user:
+        follow = Follow.objects.get_or_create(author=author, user=user)
+    return redirect('profile', username=username)
+
+
+@login_required
+def profile_unfollow(request, username):
+    """stops following the author"""
+    user = request.user
+    follow = Follow.objects.filter(author__username=username, user=user)
+    follow.delete()
+    return redirect('profile', username=username)
