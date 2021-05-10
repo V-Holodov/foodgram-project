@@ -35,3 +35,16 @@ def author_page(request, author_id):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, "authorPage.html", {"page": page, 'author': author})
+
+
+def follow_list(request):
+    user = request.user
+    latest = models.User.objects.filter(mentor__user=user)
+    paginator = Paginator(latest, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request,
+        "follow.html",
+        {"page": page, "paginator": paginator}
+        )

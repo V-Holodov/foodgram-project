@@ -89,3 +89,19 @@ class FavorRecipe(models.Model):
         User, on_delete=models.CASCADE,
         related_name="favor_recipe"
     )
+
+
+class Follow(models.Model):
+    """Relationship between an authorized user and their following"""
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='follower')
+    idol = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='mentor')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'idol'],
+                name='unique_follow'
+                )
+        ]
