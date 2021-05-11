@@ -11,7 +11,7 @@ class Ingredient(models.Model):
         verbose_name='Название ингредиента',
         max_length=200
     )
-    measure = models.CharField(
+    dimension = models.CharField(
         verbose_name='Единица измерения',
         max_length=200
     )

@@ -1,4 +1,5 @@
 Django==2.2.19
 django-multiselectfield
 Pillow
-sorl-thumbnail 
+sorl-thumbnail
+djangorestframework

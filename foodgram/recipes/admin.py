@@ -17,7 +17,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ("name", "measure")
+    list_display = ("name", "dimension")
     list_display_links = ("name",)
     list_filter = ("name",)
     empty_value_display = "-пусто-"
