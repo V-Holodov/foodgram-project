@@ -8,9 +8,9 @@
         <a class="card__title link" href="{% url 'recipe_detail' recipe.id %}" target="_blank">{{recipe.name}}</a>
         <ul class="card__items">
             {% for tag in recipe.tag %}
-                {% if "B" == tag %}
+                {% if "L" == tag %}
                     <li class="card__item"><span class="badge badge_style_green">Обед</span></li>
-                {% elif "L" == tag %}
+                {% elif "B" == tag %}
                     <li class="card__item"><span class="badge badge_style_orange">Завтрак</span></li>
                 {% elif "D" == tag %}
                     <li class="card__item"><span class="badge badge_style_purple">Ужин</span></li>

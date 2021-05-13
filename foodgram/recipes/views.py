@@ -12,7 +12,15 @@ def index(request):
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, "index.html", {"page": page})
+    return render(request, "index.html", {"page": page, 'index': True})
+
+
+def tag_index(request, tag):
+    recipes = models.Recipe.objects.filter(tag=tag)
+    paginator = Paginator(recipes, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, "index.html", {"page": page, 'index': True})
 
 
 def recipe_detail(request, recipe_id):
@@ -47,7 +55,7 @@ def follow_list(request):
     return render(
         request,
         "follow.html",
-        {"page": page, "paginator": paginator}
+        {"page": page, "paginator": paginator, 'follow_list': True}
         )
 
 
@@ -79,7 +87,11 @@ def new_recipe(request):
         new_post.author = request.user
         new_post.save()
         return redirect('index')
-    return render(request, 'new_recipe.html', {'form': form, 'edit': False})
+    return render(
+        request,
+        'new_recipe.html',
+        {'form': form, 'edit': False, 'new': True}
+        )
 
 
 @login_required
@@ -90,5 +102,21 @@ def favor_recipes(request):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
-        request, "favor_recipes.html", {"page": page, "paginator": paginator}
+        request,
+        "favor_recipes.html",
+        {"page": page, "paginator": paginator, 'favor': True}
+        )
+
+
+@login_required
+def shop_recipes(request):
+    user = request.user
+    recipes = models.Recipe.objects.filter(shop_recipe__user=user)
+    paginator = Paginator(recipes, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request,
+        "shopList.html",
+        {"page": page, "paginator": paginator, 'shop': True}
         )

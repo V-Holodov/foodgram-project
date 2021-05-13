@@ -25,6 +25,6 @@ class IngredientAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Recipe, RecipeAdmin)
 admin.site.register(models.Ingredient, IngredientAdmin)
-admin.site.register(models.ShopList)
+admin.site.register(models.ShopRecipe)
 admin.site.register(models.FavorRecipe)
 admin.site.register(models.Follow)

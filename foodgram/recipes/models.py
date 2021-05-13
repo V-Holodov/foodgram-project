@@ -109,8 +109,34 @@ class FavorRecipe(models.Model):
         related_name="favor_recipe"
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='unique_favor'
+                )
+        ]
+
     def __str__(self):
-        return f'{self.recipe} - {self.user}'
+        return f'{self.recipe} в избранном у {self.user}'
+
+
+class ShopRecipe(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='shop_recipe')
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name='shop_recipe')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='unique_shop'
+                )
+        ]
+
+    def __str__(self):
+        return f'{self.recipe} в покупках у {self.user}'
 
 
 class Follow(models.Model):
