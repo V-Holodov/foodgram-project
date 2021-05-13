@@ -2,6 +2,8 @@ from django.db import models
 from multiselectfield import MultiSelectField
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
+from typing import Optional
+from django.db.models import Exists, OuterRef
 
 User = get_user_model()
 
@@ -52,9 +54,15 @@ class Recipe(models.Model):
         verbose_name='Время приготовления',
     )
     ingredient = models.ManyToManyField(Ingredient, through='IngredientRecipe')
-    favor_recipe = models.ManyToManyField(
-        User, through='FavorRecipe', related_name="favorite",
-        )
+    pub_date = models.DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True,
+        db_index=True
+    )
+
+    # favor_recipe = models.ManyToManyField(
+    #     User, through='FavorRecipe', related_name="favorite",
+    #     )
     # slug = models.SlugField(
     #     verbose_name='Слаг',
     #     help_text=('Укажите адрес для страницы группы. Используйте только '
@@ -67,6 +75,10 @@ class Recipe(models.Model):
     # favor_recipe = models.ManyToManyField(
     #     'FavorRecipe', related_name="recipe", blank=True
     #     )
+
+    class Meta:
+        ordering = ('-pub_date', )
+        verbose_name = 'Рецепт'
 
     def __str__(self):
         return self.name
@@ -90,10 +102,15 @@ class FavorRecipe(models.Model):
     """List of the authorized user's favorite recipes"""
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
+        related_name="favor_recipe"
     )
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
+        related_name="favor_recipe"
     )
+
+    def __str__(self):
+        return f'{self.recipe} - {self.user}'
 
 
 class Follow(models.Model):

@@ -1,8 +1,8 @@
 from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from recipes import models, forms
+from . import models, forms
 
 User = get_user_model()
 
@@ -57,7 +57,7 @@ def profile_follow(request, username):
     user = request.user
     author = User.objects.get(username=username)
     if author != user:
-        follow = Follow.objects.get_or_create(author=author, user=user)
+        follow = models.Follow.objects.get_or_create(author=author, user=user)
     return redirect('profile', username=username)
 
 
@@ -65,7 +65,7 @@ def profile_follow(request, username):
 def profile_unfollow(request, username):
     """stops following the author"""
     user = request.user
-    follow = Follow.objects.filter(author__username=username, user=user)
+    follow = models.Follow.objects.filter(author__username=username, user=user)
     follow.delete()
     return redirect('profile', username=username)
 
@@ -85,7 +85,7 @@ def new_recipe(request):
 @login_required
 def favor_recipes(request):
     user = request.user
-    latest = models.Recipe.objects.filter(favor_recipe__username=user)
+    latest = models.Recipe.objects.filter(favor_recipe__user=user)
     paginator = Paginator(latest, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
