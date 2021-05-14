@@ -8,7 +8,7 @@ User = get_user_model()
 
 
 def index(request):
-    tags = {'breakfast': False, 'lanch': False, 'dinner': False}
+    tags = {'breakfast': True, 'lanch': True, 'dinner': True}
     recipes = models.Recipe.objects.all()
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
@@ -44,14 +44,14 @@ def index_add_tag(request, tag):
 def index_del_tag(request, tag):
     tags = {'brekfast': False, 'lanch': False, 'dinner': False}
     if tag == 'brekfast':
-        recipes = models.Recipe.objects.filter(tag_brekfast=True)
-        tags['brekfast'] = True
+        recipes = models.Recipe.objects.exclude(tag_brekfast=True)
+        tags['brekfast'] = False
     elif tag == 'lanch':
-        recipes = models.Recipe.objects.filter(tag_lanch=True)
-        tags['lanch'] = True
+        recipes = models.Recipe.objects.exclude(tag_lanch=True)
+        tags['lanch'] = False
     elif tag == 'dinner':
-        recipes = models.Recipe.objects.filter(tag_dinner=True)
-        tags['dinner'] = True
+        recipes = models.Recipe.objects.exclude(tag_dinner=True)
+        tags['dinner'] = False
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
