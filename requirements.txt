@@ -3,3 +3,4 @@ django-multiselectfield
 Pillow
 sorl-thumbnail
 djangorestframework
+django-debug-toolbar 

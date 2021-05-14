@@ -19,15 +19,15 @@
                     </div>
                 </div>
                 <ul class="single-card__items">
-                    {% for tag in recipe.tag %}
-                        {% if "B" == tag %}
+                        {% if recipe.tag_lanch %}
                         <li class="single-card__item"><span class="badge badge_style_green">Обед</span></li>
-                        {% elif "L" == tag %}
+                        {% endif %}
+                        {% if recipe.tag_brekfast %}
                         <li class="single-card__item"><span class="badge badge_style_orange">Завтрак</span></li>
-                        {% elif "D" == tag %}
+                        {% endif %}
+                        {% if recipe.tag_dinner %}
                         <li class="single-card__item"><span class="badge badge_style_purple">Ужин</span></li>
                         {% endif %}
-                    {% endfor %}
                 </ul>
                 <div class="single-card__items single-card__items_column">
                     <p class="single-card__text"><span class="icon-time"></span> {{recipe.cooking_time}} мин.</p>

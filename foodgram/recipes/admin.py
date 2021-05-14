@@ -10,8 +10,8 @@ class IngredientRecipeInline(admin.TabularInline):
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ("name", "author")
     list_display_links = ("name",)
-    search_fields = ("name", "author", "tag")
-    list_filter = ("name", "author", "tag")
+    search_fields = ("name", "author")
+    list_filter = ("name", "author")
     empty_value_display = "-пусто-"
     inlines = [IngredientRecipeInline]
 

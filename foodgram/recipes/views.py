@@ -8,19 +8,58 @@ User = get_user_model()
 
 
 def index(request):
+    tags = {'breakfast': False, 'lanch': False, 'dinner': False}
     recipes = models.Recipe.objects.all()
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, "index.html", {"page": page, 'index': True})
+    return render(
+        request,
+        "index.html",
+        {"page": page, 'recipes': recipes, 'index': True, 'tags': tags}
+        )
 
 
-def tag_index(request, tag):
-    recipes = models.Recipe.objects.filter(tag=tag)
+def index_add_tag(request, tag):
+    tags = {'brekfast': False, 'lanch': False, 'dinner': False}
+    if tag == 'brekfast':
+        recipes = models.Recipe.objects.filter(tag_brekfast=True)
+        tags['brekfast'] = True
+    elif tag == 'lanch':
+        recipes = models.Recipe.objects.filter(tag_lanch=True)
+        tags['lanch'] = True
+    elif tag == 'dinner':
+        recipes = models.Recipe.objects.filter(tag_dinner=True)
+        tags['dinner'] = True
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, "index.html", {"page": page, 'index': True})
+    return render(
+        request,
+        "index.html",
+        {"page": page, 'recipes': recipes, 'index': True, 'tags': tags}
+        )
+
+
+def index_del_tag(request, tag):
+    tags = {'brekfast': False, 'lanch': False, 'dinner': False}
+    if tag == 'brekfast':
+        recipes = models.Recipe.objects.filter(tag_brekfast=True)
+        tags['brekfast'] = True
+    elif tag == 'lanch':
+        recipes = models.Recipe.objects.filter(tag_lanch=True)
+        tags['lanch'] = True
+    elif tag == 'dinner':
+        recipes = models.Recipe.objects.filter(tag_dinner=True)
+        tags['dinner'] = True
+    paginator = Paginator(recipes, 6)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request,
+        "index.html",
+        {"page": page, 'recipes': recipes, 'index': True, 'tags': tags}
+        )
 
 
 def recipe_detail(request, recipe_id):

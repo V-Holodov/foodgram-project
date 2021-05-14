@@ -24,14 +24,14 @@ class Ingredient(models.Model):
 
 class Recipe(models.Model):
     """Recipes of dishes"""
-    BREAKFAST = 'B'
-    LANCH = 'L'
-    DINNER = 'D'
-    MEALTIME_CHOICES = [
-        (BREAKFAST, 'Завтрак'),
-        (LANCH, 'Обед'),
-        (DINNER, 'Ужин')
-        ]
+    # BREAKFAST = 'B'
+    # LANCH = 'L'
+    # DINNER = 'D'
+    # MEALTIME_CHOICES = [
+    #     (BREAKFAST, 'Завтрак'),
+    #     (LANCH, 'Обед'),
+    #     (DINNER, 'Ужин')
+    #     ]
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name="recipe"
@@ -46,9 +46,12 @@ class Recipe(models.Model):
         blank=True, null=True
     )
     description = models.TextField(verbose_name='Описание')
-    tag = MultiSelectField(
-        choices=MEALTIME_CHOICES,
-        verbose_name='Теги')
+    # tag = MultiSelectField(
+    #     choices=MEALTIME_CHOICES,
+    #     verbose_name='Теги')
+    tag_brekfast = models.BooleanField(default=False)
+    tag_lanch = models.BooleanField(default=False)
+    tag_dinner = models.BooleanField(default=False)
     cooking_time = models.PositiveIntegerField(
         default=0,
         verbose_name='Время приготовления',

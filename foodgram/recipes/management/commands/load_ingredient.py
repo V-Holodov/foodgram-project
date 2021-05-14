@@ -14,6 +14,7 @@ class Command(BaseCommand):
         with open(CSV_FILE_PATH) as file:
             reader = csv.reader(file)
             for row in reader:
-                name, measure = row
-                Ingredient.objects.get_or_create(name=name, measure=measure)
+                name, dimension = row
+                Ingredient.objects.get_or_create(
+                    name=name, dimension=dimension)
                 self.stdout.write("Ингредиенты загружены")

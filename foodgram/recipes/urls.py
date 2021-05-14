@@ -6,7 +6,7 @@ from .api.views import CreateFavor, DestroyFavor
 
 views_patterns = [
     path("", views.index, name="index"),
-    path("tag/<str:tag>", views.tag_index, name="tag_index"),
+    path("tag/<str:tag>", views.index_add_tag, name="index_add_tag"),
     path("recipe/<int:recipe_id>", views.recipe_detail, name="recipe_detail"),
     path("author/<int:author_id>", views.author_page, name="author_page"),
     path("follow/", views.follow_list, name="follow_list"),

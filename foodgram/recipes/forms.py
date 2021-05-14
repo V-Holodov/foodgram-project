@@ -1,12 +1,12 @@
 from django import forms
-from recipes import models
+from . import models
 
 
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = models.Recipe
         fields = [
-            'name', 'tag', 'ingredient', 'cooking_time', 'description', 'image'
+            'name', 'tag_brekfast', 'tag_lanch', 'tag_dinner', 'ingredient', 'cooking_time', 'description', 'image'
             ]
         exclude = ['author']
 
