@@ -8,7 +8,7 @@ User = get_user_model()
 
 
 def index(request):
-    tags = {'breakfast': True, 'lanch': True, 'dinner': True}
+    tags = {'brekfast': True, 'lanch': True, 'dinner': True}
     recipes = models.Recipe.objects.all()
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
