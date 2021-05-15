@@ -1,8 +1,9 @@
-from rest_framework import status
+from django.shortcuts import get_object_or_404
+from rest_framework import status, viewsets, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers
-from ..models import FavorRecipe
+from ..models import FavorRecipe, Follow
 
 
 class CreateFavor(APIView):
@@ -13,7 +14,6 @@ class CreateFavor(APIView):
             user=request.user,
             recipe_id=request.data['id'],
         )
-
         return Response({'success': True}, status=status.HTTP_200_OK)
 
 
@@ -22,4 +22,13 @@ class DestroyFavor(APIView):
 
     def delete(self, request, pk, format=None):
         FavorRecipe.objects.filter(recipe_id=pk, user=request.user).delete()
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class CreateFollow(APIView):
+    def post(self, request, format=None):
+        Follow.objects.get_or_create(
+            user=request.user,
+            idol_id=request.data['id'],
+        )
         return Response({'success': True}, status=status.HTTP_200_OK)

@@ -8,7 +8,7 @@ class IngredientRecipeInline(admin.TabularInline):
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ("name", "author")
+    list_display = ("name", "author", "id")
     list_display_links = ("name",)
     search_fields = ("name", "author")
     list_filter = ("name", "author")

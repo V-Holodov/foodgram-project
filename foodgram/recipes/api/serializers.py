@@ -7,3 +7,9 @@ class FavorSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FavorRecipe
         fields = '__all__'
+
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Follow
+        fields = '__all__'
