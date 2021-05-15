@@ -11,7 +11,7 @@
     <div class="card-list card-list_column">
         <ul class="shopping-list">
             {% for recipe in page %}
-            <li class="shopping-list__item" data-id="111">
+            <li class="shopping-list__item" data-id={{recipe.id}}>
                 <div class="recipe recipe_reverse">
                     {% load thumbnail %}
                     {% thumbnail recipe.image "1000x1000" crop="center" upscale=True as im %}

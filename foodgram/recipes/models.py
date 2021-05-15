@@ -22,6 +22,17 @@ class Ingredient(models.Model):
         return self.name
 
 
+class RecipeQuerySet(models.QuerySet):
+    def with_is_favorite(self, user_id: Optional[int]):
+        """Annotate with favorite flag."""
+        return self.annotate(is_favorite=Exists(
+            FavorRecipe.objects.filter(
+                user_id=user_id,
+                recipe_id=OuterRef('pk'),
+            ),
+        ))
+
+
 class Recipe(models.Model):
     """Recipes of dishes"""
     # BREAKFAST = 'B'
@@ -78,6 +89,7 @@ class Recipe(models.Model):
     # favor_recipe = models.ManyToManyField(
     #     'FavorRecipe', related_name="recipe", blank=True
     #     )
+    objects = RecipeQuerySet.as_manager()
 
     class Meta:
         ordering = ('-pub_date', )
@@ -93,12 +105,19 @@ class IngredientRecipe(models.Model):
     quantity = models.PositiveIntegerField()
 
 
-class ShopList(models.Model):
-    """Authorized user's shopping list"""
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
-        related_name="shoplist"
-    )
+# class Purchases(models.Model):
+#     """Authorized user's shopping list"""
+#     user = models.ForeignKey(
+#         User, on_delete=models.CASCADE,
+#         related_name="shoplist"
+#     )
+#     recipe = models.ForeignKey(
+#         Recipe, on_delete=models.CASCADE,
+#         related_name="shoplist"
+#     )
+
+#     def __str__(self):
+#         return f'{self.recipe} в списке покупок у {self.user}'
 
 
 class FavorRecipe(models.Model):
@@ -124,7 +143,7 @@ class FavorRecipe(models.Model):
         return f'{self.recipe} в избранном у {self.user}'
 
 
-class ShopRecipe(models.Model):
+class Purchas(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='shop_recipe')
     recipe = models.ForeignKey(

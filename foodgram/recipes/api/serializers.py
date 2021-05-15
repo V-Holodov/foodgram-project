@@ -13,3 +13,9 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Follow
         fields = '__all__'
+
+
+class PurchasesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Purchas
+        fields = '__all__'

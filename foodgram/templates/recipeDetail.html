@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{% static './pages/single.css' %}">
 {% endblock %}
 {% block content %}
-        <div class="single-card" data-id="371" data-author="12">
+        <div class="single-card" data-id="{{recipe.id}}" data-author="{{recipe.author.id}}">
             {% load thumbnail %}
             {% thumbnail recipe.image "1000x1000" crop="center" upscale=True as im %}
             <img src="{{ im.url }}" alt="какой-то текст" class="single-card__image">
