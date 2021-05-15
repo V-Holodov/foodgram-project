@@ -22,8 +22,10 @@
             <p class="card__text"><span class="icon-user"></span> <a href="{% url 'author_page' recipe.author.id %}" style="color: black"> {{recipe.author.first_name}} {{recipe.author.last_name}}</a></p>
         </div>
     </div>
+    {% if user.is_authenticated %}
     <div class="card__footer">
         <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
         {% include 'favorite_button.html' %}
     </div>
+    {% endif %}
 </div>

@@ -32,3 +32,9 @@ class CreateFollow(APIView):
             idol_id=request.data['id'],
         )
         return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class DestroyFollow(APIView):
+    def delete(self, request, pk, format=None):
+        Follow.objects.filter(idol_id=pk, user=request.user).delete()
+        return Response({'success': True}, status=status.HTTP_200_OK)

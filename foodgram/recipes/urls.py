@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.routers import SimpleRouter
 from . import views
-from .api.views import CreateFavor, DestroyFavor, CreateFollow
+from .api.views import CreateFavor, DestroyFavor, CreateFollow, DestroyFollow
 
 views_patterns = [
     path("", views.index, name="index"),
@@ -19,7 +19,8 @@ views_patterns = [
 api_patterns = [
     path('favorites/', CreateFavor.as_view()),
     path('favorites/<int:pk>/', DestroyFavor.as_view()),
-    path('follow/', CreateFollow.as_view()),
+    path('subscriptions/', CreateFollow.as_view()),
+    path('subscriptions/<int:pk>/', DestroyFollow.as_view())
 
 ]
 
