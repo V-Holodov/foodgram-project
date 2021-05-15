@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'multiselectfield',
     'debug_toolbar',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
