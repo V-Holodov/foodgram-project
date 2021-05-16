@@ -16,6 +16,8 @@ views_patterns = [
     path("new/", views.new_recipe, name="new_recipe"),
     path('favor/', views.favor_recipes, name='favor_recipes'),
     path('shop/', views.shop_recipes, name='shop_recipes'),
+    path('shop/download/', views.download_shoplist, name='download_shoplist'),
+
 ]
 
 # router = SimpleRouter()

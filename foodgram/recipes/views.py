@@ -3,7 +3,8 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Exists, OuterRef
-
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
 from . import models, forms
 
 User = get_user_model()
@@ -190,6 +191,25 @@ def shop_recipes(request):
         "shopList.html",
         {"page": page, "paginator": paginator, 'shop': True}
     )
+
+
+def download_shoplist(request):
+    user = request.user
+    recipes = models.Recipe.objects.filter(shop_recipe__user=user)
+    ingredient_list = []
+    for recipe in recipes:
+        ingredient_list.append(recipe.ingredient.all())
+    content = []
+    for ingredient in ingredient_list:
+        content.append(ingredient.name)
+    return HttpResponse(content, content_type='text/plain')
+    # response = HttpResponse(content_type='application/pdf')
+    # response['Content-Disposition'] = 'attachment; filename="shoplist.pdf"'
+    # p = canvas.Canvas(response)
+    # p.drawString(100, 100, "Hello world.")
+    # p.showPage()
+    # p.save()
+    # return response
 
 
 def page_not_found(request, exception):
