@@ -2,6 +2,8 @@ from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Exists, OuterRef
+
 from . import models, forms
 
 User = get_user_model()
@@ -9,7 +11,19 @@ User = get_user_model()
 
 def index(request):
     tags = {'brekfast': True, 'lanch': True, 'dinner': True}
-    recipes = models.Recipe.objects.all()
+    user_id = request.user.id
+    recipes = models.Recipe.objects.annotate(is_favorite=Exists(
+        models.FavorRecipe.objects.filter(
+            user_id=user_id,
+            recipe_id=OuterRef('pk'),
+        ),
+    ),
+        is_purchas=Exists(
+            models.Purchas.objects.filter(
+                user_id=user_id,
+                recipe_id=OuterRef('pk'),
+            ),
+    ))
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -17,7 +31,7 @@ def index(request):
         request,
         "index.html",
         {"page": page, 'recipes': recipes, 'index': True, 'tags': tags}
-        )
+    )
 
 
 def index_add_tag(request, tag):
@@ -38,7 +52,7 @@ def index_add_tag(request, tag):
         request,
         "index.html",
         {"page": page, 'recipes': recipes, 'index': True, 'tags': tags}
-        )
+    )
 
 
 def index_del_tag(request, tag):
@@ -59,20 +73,31 @@ def index_del_tag(request, tag):
         request,
         "index.html",
         {"page": page, 'recipes': recipes, 'index': True, 'tags': tags}
-        )
+    )
 
 
 def recipe_detail(request, recipe_id):
     recipe = get_object_or_404(models.Recipe, id=recipe_id)
+    if request.user.favor_recipe.filter(recipe=recipe).exists():
+        favor = True
+    else:
+        favor = False
+    if request.user.shop_recipe.filter(recipe=recipe).exists():
+        purchas = True
+    else:
+        purchas = False
     ingredients = {
         ingredient: models.IngredientRecipe.objects.get(
             recipe=recipe,
             ingredient=ingredient
-            ).quantity for ingredient in recipe.ingredient.all()}
+        ).quantity for ingredient in recipe.ingredient.all()}
     return render(
         request,
         'recipeDetail.html',
-        {'recipe': recipe, 'ingredients': ingredients}
+        {
+            'recipe': recipe, 'ingredients': ingredients,
+            'favor': favor, 'purchas': purchas
+            }
     )
 
 
@@ -95,7 +120,7 @@ def follow_list(request):
         request,
         "follow.html",
         {"page": page, "paginator": paginator, 'follow_list': True}
-        )
+    )
 
 
 @login_required
@@ -130,13 +155,19 @@ def new_recipe(request):
         request,
         'new_recipe.html',
         {'form': form, 'edit': False, 'new': True}
-        )
+    )
 
 
 @login_required
 def favor_recipes(request):
     user = request.user
-    latest = models.Recipe.objects.filter(favor_recipe__user=user)
+    latest = models.Recipe.objects.annotate(
+        is_favorite=Exists(
+            models.FavorRecipe.objects.filter(
+                user_id=user.id,
+                recipe_id=OuterRef('pk'),
+            ),
+        )).filter(favor_recipe__user=user)
     paginator = Paginator(latest, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -144,7 +175,7 @@ def favor_recipes(request):
         request,
         "favor_recipes.html",
         {"page": page, "paginator": paginator, 'favor': True}
-        )
+    )
 
 
 @login_required
@@ -158,7 +189,7 @@ def shop_recipes(request):
         request,
         "shopList.html",
         {"page": page, "paginator": paginator, 'shop': True}
-        )
+    )
 
 
 def page_not_found(request, exception):
