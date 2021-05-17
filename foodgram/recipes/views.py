@@ -196,31 +196,16 @@ def shop_recipes(request):
 
 def download_shoplist(request):
     filename = "shoplist.txt"
+    recipes = models.Recipe.objects.filter(shop_recipe__user=request.user)
     ingredients = models.IngredientRecipe.objects.filter(
-        recipe__in=models.Recipe.objects.filter(
-            shop_recipe__user=request.user
-        )
-    )
-
-    # user = request.user
-    # recipes = models.Recipe.objects.filter(shop_recipe__user=user)
-    # ingredient_list = []
-    # for recipe in recipes:
-    #     ingredient_list.append(recipe.ingredient.all())
-    # content = []
-    # for ingredient in ingredient_list:
-    #     content.append(ingredient.name)
-    content = [f'{ingredient.ingredient} {ingredient.quantity} {ingredient.ingredient.dimension} \n' for ingredient in ingredients]
+        recipe__in=recipes
+    ).values('ingredient__name', 'ingredient__dimension'
+             ).annotate(ingredient_quantity=Sum('quantity'))
+    content = [f'{ingredient["ingredient__name"]} {ingredient["ingredient_quantity"]} {ingredient["ingredient__dimension"]} \n' for ingredient in ingredients]
     response = HttpResponse(content, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(
+        filename)
     return response
-    # response = HttpResponse(content_type='application/pdf')
-    # response['Content-Disposition'] = 'attachment; filename="shoplist.pdf"'
-    # p = canvas.Canvas(response)
-    # p.drawString(100, 100, "Hello world.")
-    # p.showPage()
-    # p.save()
-    # return response
 
 
 def page_not_found(request, exception):
