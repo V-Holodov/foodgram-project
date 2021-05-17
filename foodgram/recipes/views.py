@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Exists, OuterRef
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
+from django.db.models import Sum
 from . import models, forms
 
 User = get_user_model()
@@ -98,7 +99,7 @@ def recipe_detail(request, recipe_id):
         {
             'recipe': recipe, 'ingredients': ingredients,
             'favor': favor, 'purchas': purchas
-            }
+        }
     )
 
 
@@ -194,15 +195,25 @@ def shop_recipes(request):
 
 
 def download_shoplist(request):
-    user = request.user
-    recipes = models.Recipe.objects.filter(shop_recipe__user=user)
-    ingredient_list = []
-    for recipe in recipes:
-        ingredient_list.append(recipe.ingredient.all())
-    content = []
-    for ingredient in ingredient_list:
-        content.append(ingredient.name)
-    return HttpResponse(content, content_type='text/plain')
+    filename = "shoplist.txt"
+    ingredients = models.IngredientRecipe.objects.filter(
+        recipe__in=models.Recipe.objects.filter(
+            shop_recipe__user=request.user
+        )
+    )
+
+    # user = request.user
+    # recipes = models.Recipe.objects.filter(shop_recipe__user=user)
+    # ingredient_list = []
+    # for recipe in recipes:
+    #     ingredient_list.append(recipe.ingredient.all())
+    # content = []
+    # for ingredient in ingredient_list:
+    #     content.append(ingredient.name)
+    content = [f'{ingredient.ingredient} {ingredient.quantity} {ingredient.ingredient.dimension} \n' for ingredient in ingredients]
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
+    return response
     # response = HttpResponse(content_type='application/pdf')
     # response['Content-Disposition'] = 'attachment; filename="shoplist.pdf"'
     # p = canvas.Canvas(response)
