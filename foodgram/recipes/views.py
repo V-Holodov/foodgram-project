@@ -6,6 +6,9 @@ from django.db.models import Exists, OuterRef
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from django.db.models import Sum
+from django.db import transaction
+from django.forms import ValidationError
+from django.views.decorators.csrf import csrf_protect
 from . import models, forms
 
 User = get_user_model()
@@ -114,7 +117,13 @@ def author_page(request, author_id):
 
 def follow_list(request):
     user = request.user
-    latest = models.User.objects.filter(mentor__user=user)
+    latest = models.User.objects.filter(mentor__user=user).annotate(
+        is_follow=Exists(
+            models.Follow.objects.filter(
+                user_id=user.id,
+                idol_id=OuterRef('pk'),
+            ),
+        ))
     paginator = Paginator(latest, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -145,19 +154,22 @@ def profile_unfollow(request, username):
 
 
 @login_required
+@csrf_protect
 def new_recipe(request):
     """Creating a new recipe by an authorized user"""
     form = forms.RecipeForm(request.POST or None, files=request.FILES or None)
-    if form.is_valid():
+    if not form.is_valid():
+        raise ValidationError(form.errors)
+        # return render(
+        #     request,
+        #     'new_recipe.html',
+        #     {'form': form, 'edit': False, 'new': True}
+        #     )
+    with transaction.atomic():
         new_post = form.save(commit=False)
         new_post.author = request.user
         new_post.save()
-        return redirect('index')
-    return render(
-        request,
-        'new_recipe.html',
-        {'form': form, 'edit': False, 'new': True}
-    )
+    return redirect('index')
 
 
 @login_required

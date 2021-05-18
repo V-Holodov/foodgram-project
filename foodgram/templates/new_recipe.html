@@ -10,6 +10,7 @@
     </div>
     <div class="form-container">
         <form class="form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="form__group">
                 <label for="id_name" class="form__label">Название рецепта</label>
                 <div class="form__field-group">
@@ -23,22 +24,22 @@
                     <div class="tags">
                         <div class="tags__item">
                             <input type="checkbox" name="breakfast" id="id_breakfast" class="tags__checkbox tags__checkbox_style_orange">
-                            <label for="id_breakfast" class="tags__label">Завтрак</label>
+                            <label for="id_tag_breakfast" class="tags__label">Завтрак</label>
                         </div>
                         <div class="tags__item">
                             <input type="checkbox" name="lunch" id="id_lunch" class="tags__checkbox tags__checkbox_style_green" checked>
-                            <label for="id_lunch" class="tags__label">Обед</label>
+                            <label for="id_tag_lunch" class="tags__label">Обед</label>
                         </div>
                         <div class="tags__item">
                             <input type="checkbox" name="dinner" id="id_dinner" class="tags__checkbox tags__checkbox_style_purple" checked>
-                            <label for="id_dinner" class="tags__label">Ужин</label>
+                            <label for="id_taf_dinner" class="tags__label">Ужин</label>
                         </div>
                     </div>
                     <span class="form__error"></span>
                 </div>
             </div>
             <div class="form__group">
-                <label for="nameIngredient" class="form__label">Ингредиенты</label>
+                <label for="ingredient" class="form__label">Ингредиенты</label>
                 <div class="form__field-group">
                     <div class="form__field-group-ingredientes">
                         <div class="form__dropdown">
@@ -56,10 +57,10 @@
                 </div>
             </div>
             <div class="form__group">
-                <label for="id_time" class="form__label">Время приготовления</label>
+                <label for="id_cooking_time" class="form__label">Время приготовления</label>
                 <div class="form__field-group form__field-group_time">
-                    <input type="text" id="id_time" name="name" class="form__input">
-                    <label for="id_time" class="form__label">минут</label>
+                    <input type="text" id="id_cooking_time" name="name" class="form__input">
+                    <label for="id_cooking_time" class="form__label">минут</label>
                     <span class="form__error"></span>
                 </div>
             </div>

@@ -3,7 +3,7 @@ from rest_framework import status, viewsets, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers
-from ..models import FavorRecipe, Follow, Purchas, Recipe
+from ..models import FavorRecipe, Follow, Purchas, Recipe, Ingredient
 
 
 class CreateFavor(APIView):
@@ -79,3 +79,17 @@ class PurchasesView(APIView):
         recipe = get_object_or_404(Recipe, id=recipe_id)
         Purchas.objects.get_or_create(user=request.user, recipe=recipe)
         return Response({'success': True})
+
+
+class IngredientView(APIView):
+    def get(self, request):
+        ingredients = Ingredient.objects.filter(
+            name__startswith=request.query_params.get('query')
+            )
+        list_ingredients = [
+            {
+                'title': ingredient.name,
+                'dimension': ingredient.dimension
+                }for ingredient in ingredients
+            ]
+        return Response(list_ingredients)

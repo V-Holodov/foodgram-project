@@ -3,7 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.routers import SimpleRouter
 from . import views
 from .api.views import (CreateFavor, DestroyFavor, CreateFollow, DestroyFollow,
-                        PurchasesViewSet, PurchasesView)
+                        PurchasesViewSet, PurchasesView, IngredientView)
 
 
 views_patterns = [
@@ -30,6 +30,7 @@ api_patterns = [
     path('subscriptions/<int:pk>/', DestroyFollow.as_view()),
     path('purchases/<int:pk>/', PurchasesView.as_view()),
     path('purchases/', PurchasesView.as_view()),
+    path('ingredients/', IngredientView.as_view()),
 ]
 
 # api_patterns += router.urls
