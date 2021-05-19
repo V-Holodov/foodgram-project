@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Рецепты{% endblock %}
+{% block title %}{{author.first_name}} {{author.last_name}}{% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static './pages/index.css' %}">
 {% endblock %}
@@ -25,8 +25,13 @@
         </div>
         {% if user.is_authenticated %}
             <div class="author-subscribe" data-author={{author.id}}>
-                       <!-- <p style="padding: 0 0 2em 0;"><a class="button button_style_light-blue" href="#">Подписаться на автора</a></p> -->
-                <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+                {% if follow %}
+                    <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" >Отписаться от автора</button></p>
+                {% else %}
+                    <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+                {% endif %}
+
+            
             </div>
         {% endif %}
         <div class="card-list" >

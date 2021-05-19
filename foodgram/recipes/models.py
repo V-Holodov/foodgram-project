@@ -74,23 +74,6 @@ class Recipe(models.Model):
         db_index=True
     )
 
-    # favor_recipe = models.ManyToManyField(
-    #     User, through='FavorRecipe', related_name="favorite",
-    #     )
-    # slug = models.SlugField(
-    #     verbose_name='Слаг',
-    #     help_text=('Укажите адрес для страницы группы. Используйте только '
-    #                'латиницу, цифры, дефисы и знаки подчёркивания'),
-    #     max_length=70, unique=True
-    # )
-    # shoplist = models.ManyToManyField(
-    #     'Shoplist', related_name="recipe", blank=True
-    #     )
-    # favor_recipe = models.ManyToManyField(
-    #     'FavorRecipe', related_name="recipe", blank=True
-    #     )
-    # objects = RecipeQuerySet.as_manager()
-
     class Meta:
         ordering = ('-pub_date', )
         verbose_name = 'Рецепт'

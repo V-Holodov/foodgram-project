@@ -42,21 +42,26 @@
                     <p class="single-card__text"><span class="icon-time"></span> {{recipe.cooking_time}} мин.</p>
                     <ul class="single-card__items">
                         <li class="single-card__item"><p class="single-card__text"><span class="icon-user"></span> {{recipe.author.first_name}} {{recipe.author.last_name}}</p></li>
-                        <li class="single-card__item">  <a style="margin-left: 2.5em" href="#" class="single-card__text">Редактировать рецепт</a></li>
+                        {% if recipe.author == user %}
+                            <li class="single-card__item">  <a style="margin-left: 2.5em" href="#" class="single-card__text">Редактировать рецепт</a></li>
+                        {% endif %}
                     </ul>
                 </div>
                 {% if user.is_authenticated %}
-                <ul class="single-card__items">
-                    <li class="single-card__item">
-                {% if purchas %}
-                    <button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button>
-                {% else %}
-                    <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-                {% endif %}
-                    </li>
+                    <ul class="single-card__items">
+                        <li class="single-card__item">
+                    {% if purchas %}
+                        <button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button>
+                    {% else %}
+                        <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+                    {% endif %}
+                        </li>
+                    {% if follow %}
+                        <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" >Отписаться от автора</button></li>
+                    {% else %}
                         <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
-                </ul>
-                
+                    {% endif %}
+                    </ul>
                 {% endif %}
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Ингридиенты:</h3>

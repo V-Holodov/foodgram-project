@@ -91,6 +91,10 @@ def recipe_detail(request, recipe_id):
         purchas = True
     else:
         purchas = False
+    if request.user.follower.filter(idol=recipe.author).exists():
+        follow = True
+    else:
+        follow = False
     ingredients = {
         ingredient: models.IngredientRecipe.objects.get(
             recipe=recipe,
@@ -101,18 +105,39 @@ def recipe_detail(request, recipe_id):
         'recipeDetail.html',
         {
             'recipe': recipe, 'ingredients': ingredients,
-            'favor': favor, 'purchas': purchas
+            'favor': favor, 'purchas': purchas, 'follow': follow
         }
     )
 
 
 def author_page(request, author_id):
+    user = request.user
     author = get_object_or_404(User, id=author_id)
-    recipes = models.Recipe.objects.filter(author_id=author_id)
+    recipes = models.Recipe.objects.annotate(is_favorite=Exists(
+        models.FavorRecipe.objects.filter(
+            user_id=user.id,
+            recipe_id=OuterRef('pk'),
+        ),
+    ),
+        is_purchas=Exists(
+            models.Purchas.objects.filter(
+                user_id=user.id,
+                recipe_id=OuterRef('pk'),
+            ),
+    )).filter(author_id=author_id)
+    followers = [follower.user for follower in author.mentor.all()]
+    if user in followers:
+        follow = True
+    else:
+        follow = False
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, "authorPage.html", {"page": page, 'author': author})
+    return render(
+        request,
+        "authorPage.html",
+        {"page": page, 'author': author, 'follow': follow}
+        )
 
 
 def follow_list(request):
@@ -153,23 +178,53 @@ def profile_unfollow(request, username):
     return redirect('profile', username=username)
 
 
+def get_ingredients(request):
+    ingredients = {}
+    for index, name in request.POST.items():
+        if index.startswith('nameIngredient'):
+            num = index.split(' ')[1]
+            ingredients[name] = request.POST[f'valueIngredient_{num}']
+        return ingredients
+
+
 @login_required
 @csrf_protect
 def new_recipe(request):
     """Creating a new recipe by an authorized user"""
-    form = forms.RecipeForm(request.POST or None, files=request.FILES or None)
-    if not form.is_valid():
-        # raise ValidationError(form.errors)
+    if request.method == 'POST':
+        form = forms.RecipeForm(request.POST or None, files=request.FILES or None)
+        ingredients = get_ingredients(request)
+        if not form.is_valid():
+            raise ValidationError(form.errors)
+            # return render(
+            #     request,
+            #     'new_recipe.html',
+            #     {'form': form, 'edit': False, 'new': True}
+            #     )
+        recipe = form.save(commit=False)
+        recipe.author = request.user
+        recipe.save()
+        models.IngredientRecipe.objects.filter(recipe=recipe).delete()
+        objs = []
+
+        for name, quantity in ingredients.items():
+            ingredient = get_object_or_404(models.Ingredient, name=name)
+            objs.append(models.IngredientRecipe(
+                recipe=recipe,
+                ingredient=ingredient,
+                quantity=quantity
+            )
+            )
+            models.IngredientRecipe.objects.bulk_create(objs)
+            form.save_m2m
+            return redirect('index')
+    else:
+        form = forms.RecipeForm()
         return render(
             request,
             'new_recipe.html',
             {'form': form, 'edit': False, 'new': True}
             )
-    with transaction.atomic():
-        new_post = form.save(commit=False)
-        new_post.author = request.user
-        new_post.save()
-    return redirect('index')
 
 
 @login_required
@@ -178,6 +233,11 @@ def favor_recipes(request):
     latest = models.Recipe.objects.annotate(
         is_favorite=Exists(
             models.FavorRecipe.objects.filter(
+                user_id=user.id,
+                recipe_id=OuterRef('pk'),
+            )),
+        is_purchas=Exists(
+            models.Purchas.objects.filter(
                 user_id=user.id,
                 recipe_id=OuterRef('pk'),
             ),
