@@ -159,12 +159,12 @@ def new_recipe(request):
     """Creating a new recipe by an authorized user"""
     form = forms.RecipeForm(request.POST or None, files=request.FILES or None)
     if not form.is_valid():
-        raise ValidationError(form.errors)
-        # return render(
-        #     request,
-        #     'new_recipe.html',
-        #     {'form': form, 'edit': False, 'new': True}
-        #     )
+        # raise ValidationError(form.errors)
+        return render(
+            request,
+            'new_recipe.html',
+            {'form': form, 'edit': False, 'new': True}
+            )
     with transaction.atomic():
         new_post = form.save(commit=False)
         new_post.author = request.user
