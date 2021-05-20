@@ -182,7 +182,7 @@ def get_ingredients(request):
     ingredients = {}
     for key, value in request.POST.items():
         print(key, value)
-        ingredients[value] = key
+        # ingredients[value] = key
         if key.startswith('nameIngredient'):
             num = key.split('_')[1]
             ingredients[value] = request.POST[f'valueIngredient_{num}']
@@ -194,6 +194,7 @@ def get_ingredients(request):
 def new_recipe(request):
     """Creating a new recipe by an authorized user"""
     ingredients = get_ingredients(request)
+    print(ingredients)
     form = forms.RecipeForm(
         request.POST or None,
         files=request.FILES or None
