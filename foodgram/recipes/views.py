@@ -17,18 +17,20 @@ User = get_user_model()
 def index(request):
     tags = {'brekfast': True, 'lanch': True, 'dinner': True}
     user_id = request.user.id
-    recipes = models.Recipe.objects.annotate(is_favorite=Exists(
-        models.FavorRecipe.objects.filter(
-            user_id=user_id,
-            recipe_id=OuterRef('pk'),
+    recipes = models.Recipe.objects.select_related(
+        'author', 'ingredient').annotate(
+        is_favorite=Exists(
+            models.FavorRecipe.objects.filter(
+                user_id=user_id,
+                recipe_id=OuterRef('pk'),
+            ),
         ),
-    ),
         is_purchas=Exists(
             models.Purchas.objects.filter(
                 user_id=user_id,
                 recipe_id=OuterRef('pk'),
             ),
-    ))
+        ))
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -113,18 +115,19 @@ def recipe_detail(request, recipe_id):
 def author_page(request, author_id):
     user = request.user
     author = get_object_or_404(User, id=author_id)
-    recipes = models.Recipe.objects.annotate(is_favorite=Exists(
-        models.FavorRecipe.objects.filter(
-            user_id=user.id,
-            recipe_id=OuterRef('pk'),
+    recipes = models.Recipe.objects.select_related(
+        'author', 'ingredient').annotate(is_favorite=Exists(
+            models.FavorRecipe.objects.filter(
+                user_id=user.id,
+                recipe_id=OuterRef('pk'),
+            ),
         ),
-    ),
         is_purchas=Exists(
             models.Purchas.objects.filter(
                 user_id=user.id,
                 recipe_id=OuterRef('pk'),
             ),
-    )).filter(author_id=author_id)
+        )).filter(author_id=author_id)
     followers = [follower.user for follower in author.mentor.all()]
     if user in followers:
         follow = True
@@ -142,7 +145,8 @@ def author_page(request, author_id):
 
 def follow_list(request):
     user = request.user
-    latest = models.User.objects.filter(mentor__user=user).annotate(
+    latest = models.User.objects.select_related('recipe').filter(
+        mentor__user=user).annotate(
         is_follow=Exists(
             models.Follow.objects.filter(
                 user_id=user.id,
@@ -203,7 +207,7 @@ def new_recipe(request):
             request,
             'new_recipe.html',
             {'form': form, 'edit': False, 'new': True}
-            )
+        )
     recipe = form.save(commit=False)
     recipe.author = request.user
     recipe.save()
@@ -237,7 +241,7 @@ def recipe_edit(request, recipe_id):
             request,
             'new_recipe.html',
             {'form': form, 'edit': False, 'new': True}
-            )
+        )
     recipe = form.save(commit=False)
     recipe.author = request.user
     recipe.save()
