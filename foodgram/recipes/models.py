@@ -22,27 +22,8 @@ class Ingredient(models.Model):
         return self.name
 
 
-# class RecipeQuerySet(models.QuerySet):
-#     def with_is_favorite(self, user_id: Optional[int]):
-#         """Annotate with favorite flag."""
-#         return self.annotate(is_favorite=Exists(
-#             FavorRecipe.objects.filter(
-#                 user_id=user_id,
-#                 recipe_id=OuterRef('pk'),
-#             ),
-#         ))
-
-
 class Recipe(models.Model):
     """Recipes of dishes"""
-    # BREAKFAST = 'B'
-    # LANCH = 'L'
-    # DINNER = 'D'
-    # MEALTIME_CHOICES = [
-    #     (BREAKFAST, 'Завтрак'),
-    #     (LANCH, 'Обед'),
-    #     (DINNER, 'Ужин')
-    #     ]
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name="recipe"
@@ -57,9 +38,6 @@ class Recipe(models.Model):
         blank=True, null=True
     )
     description = models.TextField(verbose_name='Описание')
-    # tag = MultiSelectField(
-    #     choices=MEALTIME_CHOICES,
-    #     verbose_name='Теги')
     tag_brekfast = models.BooleanField(default=False)
     tag_lanch = models.BooleanField(default=False)
     tag_dinner = models.BooleanField(default=False)

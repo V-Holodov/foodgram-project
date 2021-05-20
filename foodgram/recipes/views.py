@@ -137,7 +137,7 @@ def author_page(request, author_id):
         request,
         "authorPage.html",
         {"page": page, 'author': author, 'follow': follow}
-        )
+    )
 
 
 def follow_list(request):
@@ -180,51 +180,47 @@ def profile_unfollow(request, username):
 
 def get_ingredients(request):
     ingredients = {}
-    for index, name in request.POST.items():
-        if index.startswith('nameIngredient'):
-            num = index.split(' ')[1]
-            ingredients[name] = request.POST[f'valueIngredient_{num}']
-        return ingredients
+    for key, value in request.POST.items():
+        print(key, value)
+        ingredients[value] = key
+        if key.startswith('nameIngredient'):
+            num = key.split('_')[1]
+            ingredients[value] = request.POST[f'valueIngredient_{num}']
+    return ingredients
 
 
 @login_required
 @csrf_protect
 def new_recipe(request):
     """Creating a new recipe by an authorized user"""
-    if request.method == 'POST':
-        form = forms.RecipeForm(request.POST or None, files=request.FILES or None)
-        ingredients = get_ingredients(request)
-        if not form.is_valid():
-            raise ValidationError(form.errors)
-            # return render(
-            #     request,
-            #     'new_recipe.html',
-            #     {'form': form, 'edit': False, 'new': True}
-            #     )
-        recipe = form.save(commit=False)
-        recipe.author = request.user
-        recipe.save()
-        models.IngredientRecipe.objects.filter(recipe=recipe).delete()
-        objs = []
-
-        for name, quantity in ingredients.items():
-            ingredient = get_object_or_404(models.Ingredient, name=name)
-            objs.append(models.IngredientRecipe(
-                recipe=recipe,
-                ingredient=ingredient,
-                quantity=quantity
-            )
-            )
-            models.IngredientRecipe.objects.bulk_create(objs)
-            form.save_m2m
-            return redirect('index')
-    else:
-        form = forms.RecipeForm()
+    ingredients = get_ingredients(request)
+    form = forms.RecipeForm(
+        request.POST or None,
+        files=request.FILES or None
+    )
+    if not form.is_valid():
+        # raise ValidationError(form.errors)
         return render(
             request,
             'new_recipe.html',
             {'form': form, 'edit': False, 'new': True}
             )
+    recipe = form.save(commit=False)
+    recipe.author = request.user
+    recipe.save()
+    models.IngredientRecipe.objects.filter(recipe=recipe).delete()
+    objs = []
+    for name, quantity in ingredients.items():
+        ingredient = get_object_or_404(models.Ingredient, name=name)
+        objs.append(models.IngredientRecipe(
+            recipe=recipe,
+            ingredient=ingredient,
+            quantity=quantity
+        )
+        )
+        models.IngredientRecipe.objects.bulk_create(objs)
+        form.save_m2m
+        return redirect('index')
 
 
 @login_required
