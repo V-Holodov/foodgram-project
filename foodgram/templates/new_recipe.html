@@ -26,15 +26,15 @@
                 <div class="form__field-group">
                     <div class="tags">
                         <div class="tags__item">
-                            <input type="checkbox" name="breakfast" id="id_breakfast" class="tags__checkbox tags__checkbox_style_orange">
+                            <input type="checkbox" name="{{ form.tag_brekfast.html_name }}" id="{{ form.tag_brekfast.id_for_label }}" class="tags__checkbox tags__checkbox_style_orange">
                             <label for="id_tag_breakfast" class="tags__label">Завтрак</label>
                         </div>
                         <div class="tags__item">
-                            <input type="checkbox" name="lunch" id="id_lunch" class="tags__checkbox tags__checkbox_style_green" checked>
+                            <input type="checkbox" name="{{ form.tag_lanch.html_name }}" id="{{ form.tag_lanch.id_for_label }}" class="tags__checkbox tags__checkbox_style_green" checked>
                             <label for="id_tag_lunch" class="tags__label">Обед</label>
                         </div>
                         <div class="tags__item">
-                            <input type="checkbox" name="dinner" id="id_dinner" class="tags__checkbox tags__checkbox_style_purple" checked>
+                            <input type="checkbox" name="{{ form.tag_dinner.html_name }}" id="{{ form.tag_dinner.id_for_label }}" class="tags__checkbox tags__checkbox_style_purple" checked>
                             <label for="id_taf_dinner" class="tags__label">Ужин</label>
                         </div>
                     </div>
@@ -85,8 +85,11 @@
             <div class="form__group">
                 <span class="form__label">Загрузить фото</span>
                 <div class="form__field-group">
-                    <input type="file" name="file" id="id_file">
-                    <span class="form__error"></span>
+                    <label for="{{ form.image.id_for_label }}" class="form__file-button">Выбрать файл</label>
+                    <input type="file" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}" value="{{ form.image.value }}" hidden="True">
+                    {% if form.image.errors %}
+                      <span class="form__error">{{ form.image.errors }}</span>
+                    {% endif %}
                 </div>
             </div>
             <div class="form__footer">

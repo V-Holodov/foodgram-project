@@ -20,12 +20,7 @@ class RecipeForm(forms.ModelForm):
                 }
 
     def clean_text(self):
-        # print(self.data)
-        # print(self.cleaned_data)
         data = self.cleaned_data['name']
         if not data:
             raise forms.ValidationError('Поле обязательно для заполнения')
         return data
-
-    # def clean_ingredient(self):
-    #     return {'ingredientName_1': 'яблоки'}

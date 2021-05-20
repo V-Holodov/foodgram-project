@@ -181,7 +181,6 @@ def profile_unfollow(request, username):
 def get_ingredients(request):
     ingredients = {}
     for key, value in request.POST.items():
-        print(key, value)
         # ingredients[value] = key
         if key.startswith('nameIngredient'):
             num = key.split('_')[1]
@@ -194,13 +193,46 @@ def get_ingredients(request):
 def new_recipe(request):
     """Creating a new recipe by an authorized user"""
     ingredients = get_ingredients(request)
-    print(ingredients)
     form = forms.RecipeForm(
         request.POST or None,
         files=request.FILES or None
     )
     if not form.is_valid():
         # raise ValidationError(form.errors)
+        return render(
+            request,
+            'new_recipe.html',
+            {'form': form, 'edit': False, 'new': True}
+            )
+    recipe = form.save(commit=False)
+    recipe.author = request.user
+    recipe.save()
+    models.IngredientRecipe.objects.filter(recipe=recipe).delete()
+    objs = []
+    for name, quantity in ingredients.items():
+        ingredient = get_object_or_404(models.Ingredient, name=name)
+        objs.append(models.IngredientRecipe(
+            recipe=recipe,
+            ingredient=ingredient,
+            quantity=quantity
+        )
+        )
+        models.IngredientRecipe.objects.bulk_create(objs)
+        form.save_m2m
+        return redirect('index')
+
+
+@login_required
+@csrf_protect
+def recipe_edit(request, recipe_id):
+    recipe = get_object_or_404(models.Recipe, id=recipe_id)
+    ingredients = get_ingredients(request)
+    form = forms.RecipeForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=recipe
+    )
+    if not form.is_valid():
         return render(
             request,
             'new_recipe.html',

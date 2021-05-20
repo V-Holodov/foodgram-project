@@ -14,6 +14,7 @@ views_patterns = [
     path("author/<int:author_id>", views.author_page, name="author_page"),
     path("follow/", views.follow_list, name="follow_list"),
     path("new/", views.new_recipe, name="new_recipe"),
+    path("edit/<int:recipe_id>", views.recipe_edit, name="recipe_edit"),
     path('favor/', views.favor_recipes, name='favor_recipes'),
     path('shop/', views.shop_recipes, name='shop_recipes'),
     path('shop/download/', views.download_shoplist, name='download_shoplist'),
