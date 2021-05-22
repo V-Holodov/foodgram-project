@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers
-from ..models import FavorRecipe, Follow, Purchas, Recipe, Ingredient
+from ..models import FavorRecipe, Follow, Purchase, Recipe, Ingredient
 
 
 class CreateDestroyFavor(APIView):
@@ -21,7 +21,7 @@ class CreateDestroyFavor(APIView):
     def delete(self, request, pk, format=None):
         get_object_or_404(
             FavorRecipe, recipe_id=pk, user=request.user
-            ).delete()
+        ).delete()
         return JsonResponse({'success': True})
 
 
@@ -50,7 +50,7 @@ class PurchasesViewSet(
     serializer_class = serializers.PurchasesSerializer
 
     def get_queryset(self):
-        return Purchas.objects.filter(user=self.request.user)
+        return Purchase.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         recipe_id = self.request.data.get('id')
@@ -62,15 +62,15 @@ class PurchasesView(APIView):
 
     def delete(self, request, *args, **kwargs):
         recipe_id = self.kwargs.get('pk')
-        purchas = Purchas.objects.filter(user=self.request.user,
-                                         recipe=recipe_id)
+        purchas = Purchase.objects.filter(user=self.request.user,
+                                          recipe=recipe_id)
         purchas.delete()
         return Response({'success': True})
 
     def post(self, request):
         recipe_id = request.data.get('id')
         recipe = get_object_or_404(Recipe, id=recipe_id)
-        Purchas.objects.get_or_create(user=request.user, recipe=recipe)
+        Purchase.objects.get_or_create(user=request.user, recipe=recipe)
         return Response({'success': True})
 
 
@@ -78,11 +78,11 @@ class IngredientView(APIView):
     def get(self, request):
         ingredients = Ingredient.objects.filter(
             name__startswith=request.query_params.get('query')
-            )
+        )
         list_ingredients = [
             {
                 'title': ingredient.name,
                 'dimension': ingredient.dimension
-                }for ingredient in ingredients
-            ]
+            }for ingredient in ingredients
+        ]
         return Response(list_ingredients)

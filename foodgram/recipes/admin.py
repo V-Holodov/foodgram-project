@@ -29,6 +29,6 @@ class PurchasAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Recipe, RecipeAdmin)
 admin.site.register(models.Ingredient, IngredientAdmin)
-admin.site.register(models.Purchas, PurchasAdmin)
+admin.site.register(models.Purchase, PurchasAdmin)
 admin.site.register(models.FavorRecipe)
 admin.site.register(models.Follow)

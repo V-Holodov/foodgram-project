@@ -26,7 +26,7 @@ def index(request):
             ),
         ),
         is_purchas=Exists(
-            models.Purchas.objects.filter(
+            models.Purchase.objects.filter(
                 user_id=user_id,
                 recipe_id=OuterRef('pk'),
             ),
@@ -269,7 +269,7 @@ def favor_recipes(request):
                 recipe_id=OuterRef('pk'),
             )),
         is_purchas=Exists(
-            models.Purchas.objects.filter(
+            models.Purchase.objects.filter(
                 user_id=user.id,
                 recipe_id=OuterRef('pk'),
             ),
