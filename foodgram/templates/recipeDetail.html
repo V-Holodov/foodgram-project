@@ -56,10 +56,12 @@
                         <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
                     {% endif %}
                         </li>
-                    {% if follow %}
-                        <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" >Отписаться от автора</button></li>
-                    {% else %}
-                        <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
+                    {% if user != recipe.author %}
+                        {% if follow %}
+                            <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" >Отписаться от автора</button></li>
+                        {% else %}
+                            <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
+                        {% endif %}
                     {% endif %}
                     </ul>
                 {% endif %}

@@ -123,7 +123,7 @@ def author_page(request, author_id):
             ),
         ),
         is_purchas=Exists(
-            models.Purchas.objects.filter(
+            models.Purchase.objects.filter(
                 user_id=user.id,
                 recipe_id=OuterRef('pk'),
             ),

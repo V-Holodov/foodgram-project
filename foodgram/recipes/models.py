@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from multiselectfield import MultiSelectField
 from django.contrib.auth import get_user_model
@@ -158,16 +159,16 @@ class Follow(models.Model):
         related_name='mentor',
         verbose_name='На кого подписан пользователь')
 
+    def clean(self):
+        if self.user == self.idol:
+            raise ValidationError('Нельзя подписаться на себя')
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'idol'],
                 name='unique_follow'
                 ),
-            # models.CheckConstraint(
-            #     check=~models.Q(user__exact='idol'),
-            #     name='no_following_yourself'
-            #     )
         ]
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
