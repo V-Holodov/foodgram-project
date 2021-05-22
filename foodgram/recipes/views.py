@@ -18,7 +18,7 @@ def index(request):
     tags = {'brekfast': True, 'lanch': True, 'dinner': True}
     user_id = request.user.id
     recipes = models.Recipe.objects.select_related(
-        'author', 'ingredient').annotate(
+        'author').annotate(
         is_favorite=Exists(
             models.FavorRecipe.objects.filter(
                 user_id=user_id,
@@ -116,7 +116,7 @@ def author_page(request, author_id):
     user = request.user
     author = get_object_or_404(User, id=author_id)
     recipes = models.Recipe.objects.select_related(
-        'author', 'ingredient').annotate(is_favorite=Exists(
+        'author').annotate(is_favorite=Exists(
             models.FavorRecipe.objects.filter(
                 user_id=user.id,
                 recipe_id=OuterRef('pk'),
@@ -145,7 +145,7 @@ def author_page(request, author_id):
 
 def follow_list(request):
     user = request.user
-    latest = models.User.objects.select_related('recipe').filter(
+    latest = models.User.objects.filter(
         mentor__user=user).annotate(
         is_follow=Exists(
             models.Follow.objects.filter(
@@ -185,7 +185,6 @@ def profile_unfollow(request, username):
 def get_ingredients(request):
     ingredients = {}
     for key, value in request.POST.items():
-        # ingredients[value] = key
         if key.startswith('nameIngredient'):
             num = key.split('_')[1]
             ingredients[value] = request.POST[f'valueIngredient_{num}']

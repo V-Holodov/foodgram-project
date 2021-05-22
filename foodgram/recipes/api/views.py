@@ -1,14 +1,14 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets, mixins, permissions
+from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers
 from ..models import FavorRecipe, Follow, Purchas, Recipe, Ingredient
 
 
-class CreateFavor(APIView):
-    """Add a Recipe to Favorites of a User."""
-
+class CreateDestroyFavor(APIView):
+    """Adding and deleting a recipe to the user's favorites list"""
     permission_classes = [permissions.IsAuthenticated, ]
 
     def post(self, request, format=None):
@@ -16,20 +16,17 @@ class CreateFavor(APIView):
             user=request.user,
             recipe_id=request.data['id'],
         )
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-
-class DestroyFavor(APIView):
-    """Remove a Recipe from User's Favorites."""
-
-    permission_classes = [permissions.IsAuthenticated, ]
+        return JsonResponse({'success': True})
 
     def delete(self, request, pk, format=None):
-        FavorRecipe.objects.filter(recipe_id=pk, user=request.user).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
+        get_object_or_404(
+            FavorRecipe, recipe_id=pk, user=request.user
+            ).delete()
+        return JsonResponse({'success': True})
 
 
-class CreateFollow(APIView):
+class CreateDestroyFollow(APIView):
+    """The functionality of following the author of recipes"""
     permission_classes = [permissions.IsAuthenticated, ]
 
     def post(self, request, format=None):
@@ -37,15 +34,11 @@ class CreateFollow(APIView):
             user=request.user,
             idol_id=request.data['id'],
         )
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-
-class DestroyFollow(APIView):
-    permission_classes = [permissions.IsAuthenticated, ]
+        return JsonResponse({'success': True})
 
     def delete(self, request, pk, format=None):
-        Follow.objects.filter(idol_id=pk, user=request.user).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
+        get_object_or_404(Follow, idol_id=pk, user=request.user).delete()
+        return JsonResponse({'success': True})
 
 
 class PurchasesViewSet(
