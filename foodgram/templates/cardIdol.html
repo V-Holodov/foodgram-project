@@ -1,6 +1,7 @@
+{% load user_filters %}
 <div class="card-user" data-author="700">
     <div class="card-user__header">
-        <h2 class="card-user__title">{{idol.first_name}} {{idol.last_name}}</h2>
+        <h2 class="card-user__title">{{ idol.first_name }} {{ idol.last_name }}</h2>
     </div>
     <div class="card-user__body">
         <ul class="card-user__items">
@@ -16,17 +17,10 @@
                 </div>
             </li>
             {% endfor %}
-            {% if idol.recipe.all|length|add:"-3" > 3 %}
+            {% if idol.recipe.all|length > 3 %}
                 <li class="card-user__item">
                         <a href="{% url 'author_page' idol.id %}" class="card-user__link link">
-                            Ещё {{idol.recipe.all|length|add:"-3"}} 
-                            {% if idol.recipe.all|length == 4 %}
-                                рецепт...
-                            {% elif 4 < idol.recipe.all|length < 8 %}
-                                рецепта...
-                            {% else %}
-                                рецептов...
-                            {% endif %}
+                            Ещё {{ idol.recipe.all|length|add:"-3" }} {{ idol.recipe.all|length|changing_recipes }}
                         </a>
                 </li>
             {% endif %}

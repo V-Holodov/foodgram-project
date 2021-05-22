@@ -27,6 +27,23 @@ class Ingredient(models.Model):
         return self.name
 
 
+class RecipeQuerySet(models.QuerySet):
+    def with_is_recipe(self, user_id: Optional[int]):
+        return self.annotate(
+            is_favorite=Exists(
+                FavorRecipe.objects.filter(
+                    user_id=user_id,
+                    recipe_id=OuterRef('pk'),
+                ),
+            ),
+            is_purchas=Exists(
+                Purchase.objects.filter(
+                    user_id=user_id,
+                    recipe_id=OuterRef('pk'),
+                ),
+            ))
+
+
 class Recipe(models.Model):
     """Recipes of dishes"""
     author = models.ForeignKey(
@@ -59,6 +76,8 @@ class Recipe(models.Model):
         db_index=True
     )
 
+    objects = RecipeQuerySet.as_manager()
+
     class Meta:
         ordering = ('-pub_date', )
         verbose_name = 'Рецепт'
@@ -73,15 +92,15 @@ class IngredientRecipe(models.Model):
         Recipe,
         on_delete=models.CASCADE,
         verbose_name='рецепт для ингредиента'
-        )
+    )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
         verbose_name='ингредиент для рецепта'
-        )
+    )
     quantity = models.PositiveIntegerField(
         verbose_name='Количество ингредиента'
-        )
+    )
 
     class Meta:
         verbose_name = 'Связь ингредиента и рецепта'
@@ -106,7 +125,7 @@ class FavorRecipe(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
                 name='unique_favor'
-                )
+            )
         ]
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
@@ -121,20 +140,20 @@ class Purchase(models.Model):
         on_delete=models.CASCADE,
         related_name='shop_recipe',
         verbose_name='Хозяин корзины покупок'
-        )
+    )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
         related_name='shop_recipe',
         verbose_name='Рецепт в корзине пользователя'
-        )
+    )
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
                 name='unique_shop'
-                )
+            )
         ]
 
     class Meta:
@@ -152,7 +171,7 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name='follower',
         verbose_name='Подписчик'
-        )
+    )
     idol = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -168,7 +187,7 @@ class Follow(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'idol'],
                 name='unique_follow'
-                ),
+            ),
         ]
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'

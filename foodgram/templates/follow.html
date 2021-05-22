@@ -10,7 +10,7 @@
     </div>
     <div class="card-list">
         {% for idol in page %}
-            {% include "cardIdol.html" with idol=idol %}
+            {% include "cardIdol.html" with idol=idol varyrecipe=varyrecipe %}
         {% endfor %}
     </div>
     {% if page.has_other_pages %}
