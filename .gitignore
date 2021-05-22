@@ -129,6 +129,5 @@ dmypy.json
 .pyre/
 venv/
 .vscode/
-static/
 media/
 sent_emails/
