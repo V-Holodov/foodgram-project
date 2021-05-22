@@ -24,7 +24,7 @@ class Api {
       }
   }
 getPurchases () {
-  return fetch(`/api/purchases/`, {
+  return fetch(`/api/v1/purchases/`, {
     headers: this.headers
   })
     .then( e => {
@@ -35,7 +35,7 @@ getPurchases () {
     })
 }
 addPurchases (id) {
-  return fetch(`/api/purchases/`, {
+  return fetch(`/api/v1/purchases/`, {
     method: 'POST',
     headers: this.headers,
     body: JSON.stringify({
@@ -50,7 +50,7 @@ addPurchases (id) {
     })
 }
 removePurchases (id){
-  return fetch(`/api/purchases/${id}/`, {
+  return fetch(`/api/v1/purchases/${id}/`, {
     method: 'DELETE',
     headers: this.headers,
   })
@@ -62,7 +62,7 @@ removePurchases (id){
     })
 }
 addSubscriptions(id) {
-  return fetch(`/api/follow/`, {
+  return fetch(`/api/v1/subscriptions/`, {
     method: 'POST',
     headers: this.headers,
     body: JSON.stringify({
@@ -77,7 +77,7 @@ addSubscriptions(id) {
     })
 }
 removeSubscriptions (id) {
-  return fetch(`/api/follow/${id}`, {
+  return fetch(`/api/v1/subscriptions/${id}/`, {
     method: 'DELETE',
     headers: this.headers,
   })
@@ -89,7 +89,7 @@ removeSubscriptions (id) {
     })
 }
 addFavorites (id)  {
-  return fetch(`/api/favorites/`, {
+  return fetch(`/api/v1/favorites/`, {
     method: 'POST',
     headers: this.headers,
     body: JSON.stringify({
@@ -104,7 +104,7 @@ addFavorites (id)  {
       })
 }
 removeFavorites (id) {
-  return fetch(`/api/favorites/${id}/`, {
+  return fetch(`/api/v1/favorites/${id}/`, {
     method: 'DELETE',
     headers: this.headers,
   })
@@ -116,7 +116,7 @@ removeFavorites (id) {
       })
 }
   getIngredients  (text)  {
-      return fetch(`/ingredients?query=${text}`, {
+      return fetch(`/api/v1/ingredients?query=${text}`, {
           headers: this.headers,
       })
           .then( e => {
