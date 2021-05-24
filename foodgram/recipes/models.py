@@ -155,8 +155,6 @@ class Purchase(models.Model):
                 name='unique_shop'
             )
         ]
-
-    class Meta:
         verbose_name = 'Рецепт в корзине покупок'
         verbose_name_plural = 'Рецепты в корзине покупок'
 
