@@ -11,28 +11,7 @@ RESPONSE = JsonResponse({'success': True}, status=status.HTTP_200_OK)
 BAD_RESPONSE = JsonResponse(
     {'success': False},
     status=status.HTTP_400_BAD_REQUEST
-    )
-
-
-class CreateDestroyBase(APIView):
-    permission_classes = [permissions.IsAuthenticated, ]
-    create_obj = None
-    delete_obj = None
-
-    def post(self, request, format=None):
-        try:
-            self.create_obj
-            return RESPONSE
-        except ValueError:
-            return BAD_RESPONSE
-
-    def delete(self, request, pk, format=None):
-        try:
-            favor = self.delete_obj
-            favor.delete()
-            return RESPONSE
-        except ValueError:
-            return BAD_RESPONSE
+)
 
 
 class CreateDestroyFavor(APIView):
@@ -88,17 +67,23 @@ class CreateDestroyFollow(APIView):
 class PurchasesView(APIView):
 
     def delete(self, request, *args, **kwargs):
-        recipe_id = self.kwargs.get('pk')
-        purchas = Purchase.objects.filter(user=self.request.user,
-                                          recipe=recipe_id)
-        purchas.delete()
-        return Response({'success': True})
+        try:
+            recipe_id = self.kwargs.get('pk')
+            purchas = Purchase.objects.filter(user=self.request.user,
+                                              recipe=recipe_id)
+            purchas.delete()
+            return RESPONSE
+        except ValueError:
+            return BAD_RESPONSE
 
     def post(self, request):
-        recipe_id = request.data.get('id')
-        recipe = get_object_or_404(Recipe, id=recipe_id)
-        Purchase.objects.get_or_create(user=request.user, recipe=recipe)
-        return Response({'success': True})
+        try:
+            recipe_id = request.data.get('id')
+            recipe = get_object_or_404(Recipe, id=recipe_id)
+            Purchase.objects.get_or_create(user=request.user, recipe=recipe)
+            return RESPONSE
+        except ValueError:
+            return BAD_RESPONSE
 
 
 class IngredientView(APIView):

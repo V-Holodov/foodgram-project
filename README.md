@@ -14,47 +14,41 @@
 - Nginx 1.19.9
 - PostgreSQL 12.6
 
-## Инструкцию по установке обновлю на втором этапе работы
+
 ## Установка
-Проект YaMDb развертывается в трёх docker-контейнерах с использованием WSGI-сервера Gunicorn и HTTP-сервера Nginx.
+Инструкция для развертывания проекта на локальной машине.
 
 
 Для начала склонируйте репозиторий командой 
 ```bash
 git clone https://github.com/V-Holodov/foodgram-project.git
 ```
-Создайте файл .env с переменными окружения для работы с базой данных:
+Создайте виртуальное окружение и установите зависимости:
 ```
-DB_ENGINE=django.db.backends.postgresql # указываем, что работаем с postgresql
-DB_NAME=postgres # имя базы данных
-POSTGRES_USER=postgres # логин для подключения к базе данных
-POSTGRES_PASSWORD=postgres # пароль для подключения к БД (установите свой)
-DB_HOST=db # название сервиса (контейнера)
-DB_PORT=5432 # порт для подключения к БД 
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
-Для запуска приложения выполните развертывание контейнеров в фоновом режиме командой:
-```bash
-docker-compose up -d --build 
-```
+
 Для запуска миграций выполните команды:
 ```bash
-docker-compose exec web python manage.py makemigrations
-docker-compose exec web python manage.py migrate --noinput
+python manage.py makemigrations
+python manage.py migrate
 ```
 Создать суперпользователя необходимо командой:
 ```bash
-docker-compose exec web python manage.py createsuperuser
+python manage.py createsuperuser
 ```
 После этого необходимо собрать статику командой:
 ```bash
-docker-compose exec web python manage.py collectstatic --no-input
+python manage.py collectstatic
 ```
 Проверьте развертывание, перейдя по адресу:
-[http://127.0.0.1/admin/](http://127.0.0.1/admin/)
+[http://127.0.0.1/](http://127.0.0.1/)
 
-Для применения фикстур для заполнения базы начальными данными можно выполнить команду:
+Для заполнения базы начальными данными нужно выполнить команду:
 ```bash
-docker-compose exec web python manage.py load_ingredient
+python manage.py load_ingredient
 ```
 
 ## Об авторе

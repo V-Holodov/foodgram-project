@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Exists, OuterRef
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.views.generic import DetailView, ListView
 from django.db import transaction
 from django.forms import ValidationError
@@ -98,7 +98,7 @@ def index_add_tag(request, tag):
     elif tag == 'dinner':
         recipes = models.Recipe.objects.filter(tag_dinner=True)
         tags['dinner'] = True
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes, PAGINATOR_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
@@ -119,7 +119,7 @@ def index_del_tag(request, tag):
     elif tag == 'dinner':
         recipes = models.Recipe.objects.exclude(tag_dinner=True)
         tags['dinner'] = False
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes, PAGINATOR_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
@@ -170,17 +170,16 @@ def follow_list(request):
         )
 
 
-@ login_required
+@login_required
 def profile_follow(request, username):
     """Starts following the author if it is not the user himself."""
     user = request.user
     author = get_object_or_404(User, username=username)
-    if author != user:
-        follow = models.Follow.objects.get_or_create(author=author, user=user)
+    models.Follow.objects.get_or_create(author=author, user=user)
     return redirect('profile', username=username)
 
 
-@ login_required
+@login_required
 def profile_unfollow(request, username):
     """Stops following the author."""
     user = request.user
@@ -207,8 +206,8 @@ def get_ingredients(request, recipe):
     return ingredients_recipe
 
 
-@ login_required
-@ csrf_protect
+@login_required
+@csrf_protect
 def new_recipe(request):
     """Creating a new recipe by an authorized user"""
     form = forms.RecipeForm(
@@ -229,8 +228,8 @@ def new_recipe(request):
     return redirect('index')
 
 
-@ login_required
-@ csrf_protect
+@login_required
+@csrf_protect
 def recipe_edit(request, recipe_id):
     recipe = get_object_or_404(models.Recipe, id=recipe_id)
     form = forms.RecipeForm(
@@ -253,7 +252,7 @@ def recipe_edit(request, recipe_id):
     return redirect('index')
 
 
-@ login_required
+@login_required
 def favor_recipes(request):
     user = request.user
     latest = models.Recipe.objects.annotate(
@@ -278,7 +277,7 @@ def favor_recipes(request):
     )
 
 
-@ login_required
+@login_required
 def shop_recipes(request):
     user = request.user
     recipes = models.Recipe.objects.filter(shop_recipe__user=user)
