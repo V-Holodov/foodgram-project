@@ -34,7 +34,14 @@ class IsFavoriteMixin:
 def filter_qs_by_tags(request, queryset):
     tags = request.GET.getlist('tags')
     if tags:
-        queryset = queryset.filter(tag__slug__in=tags)
+        q1 = q2 = q3 = queryset.none()
+        if 'breakfast' in tags:
+            q1 = queryset.filter(tag_brekfast=True)
+        if 'lunch' in tags:
+            q2 = queryset.filter(tag_lanch=True)
+        if 'dinner' in tags:
+            q3 = queryset.filter(tag_dinner=True)
+        queryset = q1 | q2 | q3
     return queryset
 
 
@@ -59,6 +66,7 @@ class BaseRecipeListView(IsFavoriteMixin, ListView):
     def get_context_data(self, **kwargs):
         kwargs.update({'page_title': self._get_page_title()})
         context = super().get_context_data(**kwargs)
+        context['tags'] = ['breakfast', 'lunch', 'dinner']
         return context
 
     def _get_page_title(self):
@@ -70,6 +78,10 @@ class IndexView(BaseRecipeListView):
     """Main page that displays list of Recipes."""
     page_title = 'Рецепты'
     template_name = 'index.html'
+
+    def get_queryset(self):
+        qs = models.Recipe.objects.all()
+        return filter_qs_by_tags(self.request, qs)
 
 
 class FavoriteView(LoginRequiredMixin, BaseRecipeListView):

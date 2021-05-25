@@ -30,17 +30,17 @@ def tags_links(request, tag, all_tags):
         new_request = request.GET.copy()
         if request.GET.getlist('page'):  # При выборе нового tag - удаляем page
             new_request.pop('page')
-        if tag.slug in tags:
-            tags.remove(tag.slug)
+        if tag in tags:
+            tags.remove(tag)
             new_request.setlist("tags", tags)
         else:
-            new_request.appendlist("tags", tag.slug)
+            new_request.appendlist("tags", tag)
         return new_request.urlencode()
     # Если в запросе нет тегов
     result = []
     for t in all_tags:
         if t != tag:  # Выводить все, кроме текущего
-            result.append('tags=' + t.slug)
+            result.append('tags=' + t)
 
     return '&'.join(result)
 
