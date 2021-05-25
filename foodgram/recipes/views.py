@@ -52,17 +52,6 @@ class BaseRecipeListView(IsFavoriteMixin, ListView):
     paginate_by = PAGINATOR_SIZE
     page_title = None
 
-    # def get_queryset(self):
-    #     query_set = super().get_queryset()
-    #     tags = self.request.GET.get('tag', None)
-    #     if tags is None:
-    #         return query_set
-    #     filter_query = Q()
-    #     for tag in tags.split(','):
-    #         if tag in ['tag_brekfast', 'tag_lanch', 'tag_dinner']:
-    #             filter_query.add(Q(**{tag: True}), Q.OR)
-    #     return query_set.filter(filter_query)
-
     def get_context_data(self, **kwargs):
         kwargs.update({'page_title': self._get_page_title()})
         context = super().get_context_data(**kwargs)
@@ -80,7 +69,7 @@ class IndexView(BaseRecipeListView):
     template_name = 'index.html'
 
     def get_queryset(self):
-        qs = models.Recipe.objects.all()
+        qs = super().get_queryset()
         return filter_qs_by_tags(self.request, qs)
 
 
@@ -92,7 +81,7 @@ class FavoriteView(LoginRequiredMixin, BaseRecipeListView):
     def get_queryset(self):
         qs = super().get_queryset()
         qs = qs.filter(favor_recipe__user=self.request.user)
-        return qs
+        return filter_qs_by_tags(self.request, qs)
 
 
 class ProfileView(BaseRecipeListView):
@@ -111,52 +100,10 @@ class ProfileView(BaseRecipeListView):
     def get_queryset(self):
         qs = super().get_queryset()
         qs = qs.filter(author=self.author)
-        return qs
+        return filter_qs_by_tags(self.request, qs)
 
     def _get_page_title(self):
         return self.author.get_full_name()
-
-
-def index_add_tag(request, tag):
-    tags = {'brekfast': False, 'lanch': False, 'dinner': False}
-    if tag == 'brekfast':
-        recipes = models.Recipe.objects.filter(tag_brekfast=True)
-        tags['brekfast'] = True
-    elif tag == 'lanch':
-        recipes = models.Recipe.objects.filter(tag_lanch=True)
-        tags['lanch'] = True
-    elif tag == 'dinner':
-        recipes = models.Recipe.objects.filter(tag_dinner=True)
-        tags['dinner'] = True
-    paginator = Paginator(recipes, PAGINATOR_SIZE)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
-    return render(
-        request,
-        "index.html",
-        {"page": page, 'recipes': recipes, 'index': True, 'tags': tags}
-    )
-
-
-def index_del_tag(request, tag):
-    tags = {'brekfast': False, 'lanch': False, 'dinner': False}
-    if tag == 'brekfast':
-        recipes = models.Recipe.objects.exclude(tag_brekfast=True)
-        tags['brekfast'] = False
-    elif tag == 'lanch':
-        recipes = models.Recipe.objects.exclude(tag_lanch=True)
-        tags['lanch'] = False
-    elif tag == 'dinner':
-        recipes = models.Recipe.objects.exclude(tag_dinner=True)
-        tags['dinner'] = False
-    paginator = Paginator(recipes, PAGINATOR_SIZE)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
-    return render(
-        request,
-        "index.html",
-        {"page": page, 'recipes': recipes, 'index': True, 'tags': tags}
-    )
 
 
 def recipe_detail(request, recipe_id):

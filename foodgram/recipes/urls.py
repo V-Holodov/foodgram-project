@@ -8,8 +8,6 @@ from .api.views import (CreateDestroyFavor, CreateDestroyFollow,
 
 views_patterns = [
     path('', views.IndexView.as_view(), name='index'),
-    path('tagadd/<str:tag>/', views.index_add_tag, name='index_add_tag'),
-    path('tagdel/<str:tag>/', views.index_del_tag, name='index_del_tag'),
     path('recipe/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
     path(
         'author/<int:author_id>/',
