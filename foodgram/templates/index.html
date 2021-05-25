@@ -8,30 +8,31 @@
     <div class="main__header">
         <h1 class="main__title">Рецепты</h1>
         <ul class="tags">
+
+
             <li class="tags__item">
-                {% if tags.brekfast %}
-                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="{% url 'index' %}?tag_brekfast"></a>
-                {% else %}
-                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange" href="{% url 'index' %}?tag_brekfast"></a>
-                {% endif %}
+                <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="{% url 'index' %}?tag_brekfast"></a>
                 <span class="tags__label">Завтрак</span>
             </li>
             <li class="tags__item">
-                {% if tags.lanch %}
-                    <a id="lunch" class="tags__checkbox tags__checkbox_style_green tags__checkbox_active" href="{% url 'index_del_tag' tag='lanch' %}"></a>
-                {% else %}
-                    <a id="lunch" class="tags__checkbox tags__checkbox_style_green" href="{% url 'index_add_tag' tag='lanch' %}"></a>
-                {% endif %}
+                <a id="lunch" class="tags__checkbox tags__checkbox_style_green tags__checkbox_active" href="{% url 'index_del_tag' tag='lanch' %}"></a>
                 <span for="lunch" class="tags__label">Обед</span>
             </li>
             <li class="tags__item">
-                {% if tags.dinner %}
-                    <a id="dinner" class="tags__checkbox tags__checkbox_style_purple tags__checkbox_active" href="{% url 'index_del_tag' tag='dinner' %}"></a>
-                {% else %}
-                    <a id="dinner" class="tags__checkbox tags__checkbox_style_purple" href="{% url 'index_add_tag' tag='dinner' %}"></a>
-                {% endif %}
+                <a id="dinner" class="tags__checkbox tags__checkbox_style_purple tags__checkbox_active" href="{% url 'index_del_tag' tag='dinner' %}"></a>
                 <label for="dinner" class="tags__label">Ужин</label>
             </li>
+
+            {% for tag in tags %}
+            <li class="tags__item">
+                <a id="breakfast" class="tags__checkbox tags__checkbox_style_{{ tag.style }}
+                {% if request|is_selected:tag.slug %}
+                    tags__checkbox_active
+                {% endif %}"
+                href='?{% tags_links request tag tags %}'></a>
+                <span class="tags__label">{{ tag.name }}</span>
+            </li>
+        {% endfor %}
         </ul>
     </div>
     <div class="card-list">
