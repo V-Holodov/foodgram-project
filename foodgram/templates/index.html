@@ -10,9 +10,9 @@
         <ul class="tags">
             <li class="tags__item">
                 {% if tags.brekfast %}
-                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="{% url 'index_del_tag' tag='brekfast' %}"></a>
+                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="{% url 'index' %}?tag_brekfast"></a>
                 {% else %}
-                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange" href="{% url 'index_add_tag' tag='brekfast' %}"></a>
+                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange" href="{% url 'index' %}?tag_brekfast"></a>
                 {% endif %}
                 <span class="tags__label">Завтрак</span>
             </li>

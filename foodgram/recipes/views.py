@@ -38,6 +38,17 @@ class BaseRecipeListView(IsFavoriteMixin, ListView):
     paginate_by = PAGINATOR_SIZE
     page_title = None
 
+    def get_queryset(self):
+        query_set = super().get_queryset()
+        tags = self.request.GET.get('tag', None)
+        if tags is None:
+            return query_set
+        filter_query = Q()
+        for tag in tags.split(','):
+            if tag in ['tag_brekfast', 'tag_lanch', 'tag_dinner']:
+                filter_query.add(Q(**{tag: True}), Q.OR)
+        return query_set.filter(filter_query)
+
     def get_context_data(self, **kwargs):
         kwargs.update({'page_title': self._get_page_title()})
         context = super().get_context_data(**kwargs)
