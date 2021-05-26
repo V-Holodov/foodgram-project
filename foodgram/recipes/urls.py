@@ -1,10 +1,10 @@
-from django.urls import path, include
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.urls import include, path
 from rest_framework.routers import SimpleRouter
+from rest_framework.urlpatterns import format_suffix_patterns
+
 from . import views
 from .api.views import (CreateDestroyFavor, CreateDestroyFollow,
-                        PurchasesView, IngredientView)
-
+                        IngredientView, PurchasesView)
 
 views_patterns = [
     path('', views.IndexView.as_view(), name='index'),

@@ -1,8 +1,9 @@
 import csv
 import os
+
+from config.settings import BASE_DIR
 from django.core.management.base import BaseCommand
 from recipes.models import Ingredient
-from config.settings import BASE_DIR
 
 CSV_FILE_PATH = os.path.join(BASE_DIR, 'ingredients.csv')
 

@@ -1,5 +1,6 @@
-from django import template
 from urllib.parse import urlencode
+
+from django import template
 
 register = template.Library()
 
@@ -40,7 +41,6 @@ def tags_links(request, tag, all_tags):
     for t in all_tags:
         if t != tag:
             result.append('tags=' + t)
-
     return '&'.join(result)
 
 

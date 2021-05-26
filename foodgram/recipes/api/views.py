@@ -1,11 +1,11 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets, mixins, permissions
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from . import serializers
-from ..models import FavorRecipe, Follow, Purchase, Recipe, Ingredient
 
+from ..models import FavorRecipe, Follow, Ingredient, Purchase, Recipe
+from . import serializers
 
 RESPONSE = JsonResponse({'success': True})
 BAD_RESPONSE = JsonResponse(
@@ -29,13 +29,13 @@ class CreateDestroyFavor(APIView):
             return BAD_RESPONSE
 
     def delete(self, request, pk, format=None):
-        try:
-            favor = FavorRecipe.objects.filter(
-                recipe_id=pk, user=request.user
-            )
-            favor.delete()
+        favor = FavorRecipe.objects.filter(
+            recipe_id=pk, user=request.user
+        )
+        deleted, _ = favor.delete()
+        if deleted:
             return RESPONSE
-        except ValueError:
+        else:
             return BAD_RESPONSE
 
 

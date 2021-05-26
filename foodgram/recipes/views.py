@@ -1,17 +1,17 @@
-from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Exists, OuterRef
-from django.http import HttpResponse
-from reportlab.pdfgen import canvas
-from django.db.models import Sum, Q
-from django.views.generic import DetailView, ListView
+from django.core.paginator import Paginator
 from django.db import transaction
+from django.db.models import Exists, OuterRef, Q, Sum
 from django.forms import ValidationError
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_protect
-from . import models, forms
+from django.views.generic import DetailView, ListView
+from reportlab.pdfgen import canvas
+
+from . import forms, models
 
 User = get_user_model()
 
