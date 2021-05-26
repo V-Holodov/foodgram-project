@@ -24,4 +24,9 @@ class RecipeForm(forms.ModelForm):
         data = self.cleaned_data['name']
         if not data:
             raise forms.ValidationError('Поле обязательно для заполнения')
+        tag_brekfast = self.cleaned_data['tag_brekfast']
+        tag_lanch = self.cleaned_data['tag_lanch']
+        tag_dinner = self.cleaned_data['tag_dinner']
+        if tag_brekfast == tag_lanch == tag_dinner is False:
+            raise forms.ValidationError('Необходимо выбрать тег')
         return data

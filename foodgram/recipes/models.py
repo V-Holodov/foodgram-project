@@ -58,16 +58,13 @@ class Recipe(models.Model):
     image = models.ImageField(
         verbose_name='Загрузить фото',
         upload_to='recipes/',
-        blank=True, null=True
     )
     description = models.TextField(verbose_name='Описание')
     tag_brekfast = models.BooleanField(default=False, verbose_name='Завтрак')
     tag_lanch = models.BooleanField(default=False, verbose_name='Обед')
     tag_dinner = models.BooleanField(default=False, verbose_name='Ужин')
     cooking_time = models.PositiveIntegerField(
-        validators=(
-            MinValueValidator(limit_value=1),
-        ),
+        default='',
         verbose_name='Время приготовления',
     )
     ingredient = models.ManyToManyField(Ingredient, through='IngredientRecipe')

@@ -16,8 +16,8 @@
                 <label for="{{ form.name.id_for_label }}" class="form__label">Название рецепта</label>
                 <div class="form__field-group">
                     {{ form.name | addclass:"form__input" }}
-                    {% if form.title.errors %}
-                        <span class="form__error">{{ form.title.errors }}</span>
+                    {% if form.name.errors %}
+                      <span class="form__error">Поле обязательно для заполнения</span>
                     {% endif %}
                 </div>
             </div>
@@ -38,7 +38,9 @@
                             <label for="id_taf_dinner" class="tags__label">Ужин</label>
                         </div>
                     </div>
-                    <span class="form__error"></span>
+                    {% if form.tags.errors %}
+                      <span class="form__error">Необходимо выбрать тег</span>
+                    {% endif %}
                 </div>
             </div>
             <div class="form__group">
@@ -72,14 +74,18 @@
                 <div class="form__field-group form__field-group_time">
                     <input type="{{ form.cooking_time.widget_type }}" id="{{ form.cooking_time.id_for_label }}" name="{{ form.cooking_time.html_name }}" value="{{ form.cooking_time.value}}" class="form__input">
                     <label for="{{ form.cooking_time.id_for_label }}" class="form__label">минут</label>
-                    <span class="form__error"></span>
+                    {% if form.cooking_time.errors %}
+                      <span class="form__error">Поле обязательно для заполнения</span>
+                    {% endif %}
                 </div>
             </div>
             <div class="form__group">
                 <label for="id_description" class="form__label">Описание</label>
                 <div class="form__field-group">
                     <textarea name="description" id="id_description" rows="8" class="form__textarea"></textarea>
-                    <span class="form__error"></span>
+                    {% if form.description.errors %}
+                      <span class="form__error">Поле обязательно для заполнения</span>
+                    {% endif %}
                 </div>
             </div>
             <div class="form__group">
@@ -88,7 +94,7 @@
                     <label for="{{ form.image.id_for_label }}" class="form__file-button">Выбрать файл</label>
                     <input type="file" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}" value="{{ form.image.value }}" hidden="True">
                     {% if form.image.errors %}
-                      <span class="form__error">{{ form.image.errors }}</span>
+                        <span class="form__error">Необходимо загрузить фото</span>
                     {% endif %}
                 </div>
             </div>
