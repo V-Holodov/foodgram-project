@@ -43,6 +43,10 @@ python manage.py createsuperuser
 ```bash
 python manage.py collectstatic
 ```
+Запустите сервер разработки django
+```bash
+python manage.py runserver
+```
 Проверьте развертывание, перейдя по адресу:
 [http://127.0.0.1/](http://127.0.0.1/)
 
