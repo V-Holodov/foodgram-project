@@ -17,4 +17,4 @@ class Command(BaseCommand):
                 name, dimension = row
                 Ingredient.objects.get_or_create(
                     name=name, dimension=dimension)
-                self.stdout.write("Ингредиенты загружены")
+            print("Ингредиенты загружены")

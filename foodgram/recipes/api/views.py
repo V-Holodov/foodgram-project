@@ -7,7 +7,7 @@ from . import serializers
 from ..models import FavorRecipe, Follow, Purchase, Recipe, Ingredient
 
 
-RESPONSE = JsonResponse({'success': True}, status=status.HTTP_200_OK)
+RESPONSE = JsonResponse({'success': True})
 BAD_RESPONSE = JsonResponse(
     {'success': False},
     status=status.HTTP_400_BAD_REQUEST
