@@ -14,54 +14,23 @@ BAD_RESPONSE = JsonResponse(
 )
 
 
-# class CreateDestroyBase(APIView):
-#     permission_classes = [permissions.IsAuthenticated, ]
-#     model = None
-#     relat_model = None
-
-#     def post(self, request, format=None):
-#         try:
-#             FavorRecipe.objects.create(
-#                 user=request.user,
-#                 recipe_id=request.data['id'],
-#             )
-#             return RESPONSE
-#         except ValueError:
-#             return BAD_RESPONSE
-
-#     def delete(self, request, pk, format=None):
-#         favor = FavorRecipe.objects.filter(
-#             recipe_id=pk, user=request.user
-#         )
-#         deleted, _ = favor.delete()
-#         if deleted:
-#             return RESPONSE
-#         else:
-#             return BAD_RESPONSE
-
-
-# class CreateDestroyFavor(CreateDestroyBase):
-#     """Adding and deleting a recipe to the user's favorites list"""
-#     model = FavorRecipe
-#     field = FavorRecipe.recipe.id
-
-
-class CreateDestroyFavor(APIView):
-    """Adding and deleting a recipe to the user's favorites list"""
+# Объеденил только два класса, третий с подпиской так и не получилось свести
+class CreateDestroyBase(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
+    model = None
 
     def post(self, request, format=None):
         try:
-            FavorRecipe.objects.create(
-                user=request.user,
+            self.model.objects.create(
                 recipe_id=request.data['id'],
+                user=request.user,
             )
             return RESPONSE
         except ValueError:
             return BAD_RESPONSE
 
     def delete(self, request, pk, format=None):
-        favor = FavorRecipe.objects.filter(
+        favor = self.model.objects.filter(
             recipe_id=pk, user=request.user
         )
         deleted, _ = favor.delete()
@@ -69,6 +38,16 @@ class CreateDestroyFavor(APIView):
             return RESPONSE
         else:
             return BAD_RESPONSE
+
+
+class CreateDestroyFavor(CreateDestroyBase):
+    """Adding and deleting a recipe to the user's favorites list"""
+    model = FavorRecipe
+
+
+class PurchasesView(CreateDestroyBase):
+    """Adding and deleting a recipe to the user's shoplist"""
+    model = Purchase
 
 
 class CreateDestroyFollow(APIView):
@@ -93,28 +72,6 @@ class CreateDestroyFollow(APIView):
         if deleted:
             return RESPONSE
         else:
-            return BAD_RESPONSE
-
-
-class PurchasesView(APIView):
-
-    def delete(self, request, *args, **kwargs):
-        try:
-            recipe_id = self.kwargs.get('pk')
-            purchas = Purchase.objects.filter(user=self.request.user,
-                                              recipe=recipe_id)
-            purchas.delete()
-            return RESPONSE
-        except ValueError:
-            return BAD_RESPONSE
-
-    def post(self, request):
-        try:
-            recipe_id = request.data.get('id')
-            recipe = get_object_or_404(Recipe, id=recipe_id)
-            Purchase.objects.get_or_create(user=request.user, recipe=recipe)
-            return RESPONSE
-        except ValueError:
             return BAD_RESPONSE
 
 
