@@ -14,26 +14,25 @@ BAD_RESPONSE = JsonResponse(
 )
 
 
-# Объеденил только два класса, третий с подпиской так и не получилось свести
 class CreateDestroyBase(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
-    model = None
+    qs = None
+    field_name = None
 
-    def post(self, request, format=None):
+    def post(self, request):
         try:
-            self.model.objects.create(
-                recipe_id=request.data['id'],
-                user=request.user,
-            )
+            pk_filter = self.field_name
+            self.qs.create(**{pk_filter: request.data['id']},
+                           user=request.user)
             return RESPONSE
         except ValueError:
             return BAD_RESPONSE
 
-    def delete(self, request, pk, format=None):
-        favor = self.model.objects.filter(
-            recipe_id=pk, user=request.user
-        )
-        deleted, _ = favor.delete()
+    def delete(self, request, pk):
+        pk_filter = self.field_name
+        obj = self.qs.filter(**{pk_filter: pk},
+                             user=request.user)
+        deleted, _ = obj.delete()
         if deleted:
             return RESPONSE
         else:
@@ -42,12 +41,14 @@ class CreateDestroyBase(APIView):
 
 class CreateDestroyFavor(CreateDestroyBase):
     """Adding and deleting a recipe to the user's favorites list"""
-    model = FavorRecipe
+    qs = FavorRecipe.objects.all()
+    field_name = 'recipe_id'
 
 
 class PurchasesView(CreateDestroyBase):
     """Adding and deleting a recipe to the user's shoplist"""
-    model = Purchase
+    qs = Purchase.objects.all()
+    field_name = 'recipe_id'
 
 
 class CreateDestroyFollow(APIView):
