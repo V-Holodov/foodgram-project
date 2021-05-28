@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import DetailView, ListView
 from reportlab.pdfgen import canvas
+import operator
+from functools import reduce
 
 from . import forms, models
 
@@ -34,14 +36,8 @@ class IsFavoriteMixin:
 def filter_qs_by_tags(request, queryset):
     tags = request.GET.getlist('tags')
     if tags:
-        q1 = q2 = q3 = queryset.none()
-        if 'breakfast' in tags:
-            q1 = queryset.filter(tag_brekfast=True)
-        if 'lunch' in tags:
-            q2 = queryset.filter(tag_lanch=True)
-        if 'dinner' in tags:
-            q3 = queryset.filter(tag_dinner=True)
-        queryset = q1 | q2 | q3
+        tag_dict = [Q(**{f'tag_{tag}': True}) for tag in tags]
+        queryset = queryset.filter(reduce(operator.or_, tag_dict))
     return queryset
 
 

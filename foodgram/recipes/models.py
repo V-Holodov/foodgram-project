@@ -60,8 +60,8 @@ class Recipe(models.Model):
         upload_to='recipes/',
     )
     description = models.TextField(verbose_name='Описание')
-    tag_brekfast = models.BooleanField(default=False, verbose_name='Завтрак')
-    tag_lanch = models.BooleanField(default=False, verbose_name='Обед')
+    tag_breakfast = models.BooleanField(default=False, verbose_name='Завтрак')
+    tag_lunch = models.BooleanField(default=False, verbose_name='Обед')
     tag_dinner = models.BooleanField(default=False, verbose_name='Ужин')
     cooking_time = models.IntegerField(
         verbose_name='Время приготовления',

@@ -12,7 +12,7 @@ class RecipeForm(forms.ModelForm):
     class Meta:
         model = models.Recipe
         fields = [
-            'name', 'tag_brekfast', 'tag_lanch', 'tag_dinner',
+            'name', 'tag_breakfast', 'tag_lunch', 'tag_dinner',
             'ingredient', 'cooking_time', 'description', 'image'
             ]
         exclude = ['author']
@@ -24,9 +24,9 @@ class RecipeForm(forms.ModelForm):
         data = self.cleaned_data['name']
         if not data:
             raise forms.ValidationError('Поле обязательно для заполнения')
-        tag_brekfast = self.cleaned_data['tag_brekfast']
-        tag_lanch = self.cleaned_data['tag_lanch']
+        tag_breakfast = self.cleaned_data['tag_breakfast']
+        tag_lunch = self.cleaned_data['tag_lunch']
         tag_dinner = self.cleaned_data['tag_dinner']
-        if tag_brekfast == tag_lanch == tag_dinner is False:
+        if tag_breakfast == tag_lunch == tag_dinner is False:
             raise forms.ValidationError('Необходимо выбрать тег')
         return data
