@@ -63,9 +63,11 @@ class Recipe(models.Model):
     tag_brekfast = models.BooleanField(default=False, verbose_name='Завтрак')
     tag_lanch = models.BooleanField(default=False, verbose_name='Обед')
     tag_dinner = models.BooleanField(default=False, verbose_name='Ужин')
-    cooking_time = models.PositiveIntegerField(
-        default='',
+    cooking_time = models.IntegerField(
         verbose_name='Время приготовления',
+        validators=[
+            MinValueValidator(limit_value=1),
+            ]
     )
     ingredient = models.ManyToManyField(Ingredient, through='IngredientRecipe')
     pub_date = models.DateTimeField(
