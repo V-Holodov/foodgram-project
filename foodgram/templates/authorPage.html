@@ -23,11 +23,11 @@
         {% endif %}
         <div class="card-list" >
             {% for recipe in page_obj %}
-                {% include "cardRecipe.html" with recipe=recipe %}
+                {% include "cardRecipe.html" %}
             {% endfor %}
         </div>
         {% if page_obj.has_other_pages %}
-            {% include "paginator.html" with items=page paginator=paginator%}
+            {% include "paginator.html" with items=page %}
         {% endif %}
 
 {% endblock content %}
