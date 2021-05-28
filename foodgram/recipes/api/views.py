@@ -16,22 +16,20 @@ BAD_RESPONSE = JsonResponse(
 
 class CreateDestroyBase(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
-    qs = None
-    field_name = None
+    model = None
+    field = None
 
-    def post(self, request):
+    def post(self, request, format=None):
         try:
-            pk_filter = self.field_name
-            self.qs.create(**{pk_filter: request.data['id']},
-                           user=request.user)
+            self.model.objects.create(**{self.field: request.data['id']},
+                                      user=request.user)
             return RESPONSE
         except ValueError:
             return BAD_RESPONSE
 
-    def delete(self, request, pk):
-        pk_filter = self.field_name
-        obj = self.qs.filter(**{pk_filter: pk},
-                             user=request.user)
+    def delete(self, request, pk, format=None):
+        obj = self.model.objects.filter(**{self.field: pk},
+                                        user=request.user)
         deleted, _ = obj.delete()
         if deleted:
             return RESPONSE
@@ -41,39 +39,20 @@ class CreateDestroyBase(APIView):
 
 class CreateDestroyFavor(CreateDestroyBase):
     """Adding and deleting a recipe to the user's favorites list"""
-    qs = FavorRecipe.objects.all()
-    field_name = 'recipe_id'
+    model = FavorRecipe
+    field = 'recipe_id'
 
 
 class PurchasesView(CreateDestroyBase):
     """Adding and deleting a recipe to the user's shoplist"""
-    qs = Purchase.objects.all()
-    field_name = 'recipe_id'
+    model = Purchase
+    field = 'recipe_id'
 
 
-class CreateDestroyFollow(APIView):
+class CreateDestroyFollow(CreateDestroyBase):
     """The functionality of following the author of recipes"""
-    permission_classes = [permissions.IsAuthenticated, ]
-
-    def post(self, request, format=None):
-        try:
-            Follow.objects.create(
-                user=request.user,
-                idol_id=request.data['id'],
-            )
-            return RESPONSE
-        except ValueError:
-            return BAD_RESPONSE
-
-    def delete(self, request, pk, format=None):
-        follow = Follow.objects.filter(
-            idol_id=pk, user=request.user
-        )
-        deleted, _ = follow.delete()
-        if deleted:
-            return RESPONSE
-        else:
-            return BAD_RESPONSE
+    model = Follow
+    field = 'idol_id'
 
 
 class IngredientView(APIView):
