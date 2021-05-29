@@ -28,12 +28,7 @@ SECRET_KEY = 'k_bkn%b4fp(6jep=7nf$1xstc-!nzbm^955$1l+2i1)!4&ur)c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "[::1]",
-    "testserver",
-]
+ALLOWED_HOSTS = ['*']
 
 INTERNAL_IPS = [
     "127.0.0.1",
