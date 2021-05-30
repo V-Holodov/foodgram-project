@@ -14,45 +14,44 @@
 - Nginx 1.19.9
 - PostgreSQL 12.6
 
-
+проект запущен и доступен по адресу:
+[http://84.201.137.8//](http://84.201.137.8/)
 ## Установка
-Инструкция для развертывания проекта на локальной машине.
-
 
 Для начала склонируйте репозиторий командой 
 ```bash
 git clone https://github.com/V-Holodov/foodgram-project.git
 ```
-Создайте виртуальное окружение и установите зависимости:
+Создайте файл .env с переменными окружения для работы с базой данных:
 ```
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+DB_ENGINE=django.db.backends.postgresql # указываем, что работаем с postgresql
+DB_NAME=postgres # имя базы данных
+POSTGRES_USER=postgres # логин для подключения к базе данных
+POSTGRES_PASSWORD=postgres # пароль для подключения к БД (установите свой)
+DB_HOST=db # название сервиса (контейнера)
+DB_PORT=5432 # порт для подключения к БД 
 ```
-
+Для запуска приложения выполните развертывание контейнеров в фоновом режиме командой:
+```bash
+docker-compose up -d --build 
+```
 Для запуска миграций выполните команды:
 ```bash
-python manage.py makemigrations
-python manage.py migrate
+docker-compose exec web python manage.py makemigrations
+docker-compose exec web python manage.py migrate --noinput
 ```
 Создать суперпользователя необходимо командой:
 ```bash
-python manage.py createsuperuser
+docker-compose exec web python manage.py createsuperuser
 ```
 После этого необходимо собрать статику командой:
 ```bash
-python manage.py collectstatic
+docker-compose exec web python manage.py collectstatic --no-input
 ```
-Запустите сервер разработки django
-```bash
-python manage.py runserver
-```
-Проверьте развертывание, перейдя по адресу:
-[http://127.0.0.1/](http://127.0.0.1/)
 
 Для заполнения базы начальными данными нужно выполнить команду:
 ```bash
-python manage.py load_ingredient
+docker-compose exec web python manage.py load_ingredient
 ```
 
 ## Об авторе
