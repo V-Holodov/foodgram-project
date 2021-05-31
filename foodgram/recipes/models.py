@@ -2,10 +2,9 @@ from typing import Optional
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Exists, OuterRef
-from multiselectfield import MultiSelectField
 
 User = get_user_model()
 
@@ -67,7 +66,7 @@ class Recipe(models.Model):
         verbose_name='Время приготовления',
         validators=[
             MinValueValidator(limit_value=1),
-            ]
+        ]
     )
     ingredient = models.ManyToManyField(Ingredient, through='IngredientRecipe')
     pub_date = models.DateTimeField(

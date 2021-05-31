@@ -1,5 +1,3 @@
-from urllib.parse import urlencode
-
 from django import template
 
 register = template.Library()
@@ -14,14 +12,13 @@ def addclass(field, css):
 def changing_recipes(more_recipes):
     more_recipes -= 3
     if more_recipes in [11, 12, 13, 14]:
-        varyrecipe = 'рецептов'
+        return 'рецептов'
     elif more_recipes % 10 == 1:
-        varyrecipe = 'рецепт'
+        return 'рецепт'
     elif more_recipes % 10 in [2, 3, 4]:
-        varyrecipe = 'рецепта'
+        return 'рецепта'
     else:
-        varyrecipe = 'рецептов'
-    return varyrecipe
+        return 'рецептов'
 
 
 @register.simple_tag

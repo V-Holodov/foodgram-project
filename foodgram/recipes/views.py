@@ -1,17 +1,15 @@
+import operator
+from functools import reduce
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.db import transaction
 from django.db.models import Exists, OuterRef, Q, Sum
-from django.forms import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import DetailView, ListView
-from reportlab.pdfgen import canvas
-import operator
-from functools import reduce
+from django.views.generic import ListView
 
 from . import forms, models
 
@@ -37,7 +35,7 @@ def filter_qs_by_tags(request, queryset):
     tags = request.GET.getlist('tags')
     if tags:
         tag_dict = [Q(**{f'tag_{tag}': True}) for tag in tags]
-        queryset = queryset.filter(reduce(operator.or_, tag_dict))
+        return queryset.filter(reduce(operator.or_, tag_dict))
     return queryset
 
 
@@ -140,7 +138,7 @@ def follow_list(request):
         request,
         "follow.html",
         {"page": page, "paginator": paginator, 'follow_list': True}
-        )
+    )
 
 
 @login_required

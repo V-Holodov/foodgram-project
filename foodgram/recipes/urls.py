@@ -1,5 +1,4 @@
 from django.urls import include, path
-from rest_framework.routers import SimpleRouter
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import views
@@ -13,7 +12,7 @@ views_patterns = [
         'author/<int:author_id>/',
         views.ProfileView.as_view(),
         name='author_page'
-        ),
+    ),
     path('follow/', views.follow_list, name='follow_list'),
     path('new/', views.new_recipe, name='new_recipe'),
     path('edit/<int:recipe_id>/', views.recipe_edit, name='recipe_edit'),

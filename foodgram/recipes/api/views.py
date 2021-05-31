@@ -1,11 +1,9 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from rest_framework import mixins, permissions, status, viewsets
+from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..models import FavorRecipe, Follow, Ingredient, Purchase, Recipe
-from . import serializers
+from ..models import FavorRecipe, Follow, Ingredient, Purchase
 
 RESPONSE = JsonResponse({'success': True})
 BAD_RESPONSE = JsonResponse(

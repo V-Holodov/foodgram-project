@@ -14,11 +14,11 @@ class RecipeForm(forms.ModelForm):
         fields = [
             'name', 'tag_breakfast', 'tag_lunch', 'tag_dinner',
             'ingredient', 'cooking_time', 'description', 'image'
-            ]
+        ]
         exclude = ['author']
         required = {
-                    'ingredient': False,
-                }
+            'ingredient': False,
+        }
 
     def clean_text(self):
         data = self.cleaned_data['name']
