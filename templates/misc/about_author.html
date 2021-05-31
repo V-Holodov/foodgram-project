@@ -1,18 +1,14 @@
-{% extends "base.html" %} 
-{% block title %} Об авторе {% endblock %}
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Об авторе{% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static './pages/index.css' %}">
 {% endblock %}
 {% block content %}
-
-<main role="main" class="container">
-<div class="row">
-  <div class="col-md-12">
-    <h1>Об авторе</h1>
-    <p class="lead">Проект подготовлен студентом 10-й когорты бэкенд-факультета Яндекс-Практикума Виталием Холодовым. </p>
-    <p class="lead"><a href="{% url 'index' %}">Вернуться на главную</a></p>
-  </div>
-</div>
-</main>
-
-{% endblock %} 
+        <div class="main__header">
+            <h1 class="main__title">Об авторе</h1>
+            <li class="nav__item"><a class="nav__link link">Проект подготовлен студентом 10-й когорты бэкенд-факультета Яндекс-Практикума Виталием Холодовым. </a></li>
+            <li class="nav__item"><a href="{% url 'index' %}" class="nav__link link">Вернуться на главную</a></li>
+          </div>
+       
+{% endblock content %}
