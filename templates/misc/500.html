@@ -12,4 +12,19 @@
 </div>
 </main>
 
-{% endblock %} 
+{% endblock %}
+
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Ошибка 500{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static './pages/index.css' %}">
+{% endblock %}
+{% block content %}
+        <div class="main__header">
+            <h1 class="main__title">Ошибка 500</h1>
+            <li class="nav__item"><a class="nav__link link">Ошибка на сервере, попробуйте обновить страницу или обратиться позже</a></li>
+            <li class="nav__item"><a href="{% url 'index' %}" class="nav__link link">Вернуться на главную</a></li>
+          </div>
+       
+{% endblock content %}
