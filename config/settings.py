@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'multiselectfield',
     'debug_toolbar',
     'rest_framework',
+    'about',
 ]
 
 MIDDLEWARE = [
