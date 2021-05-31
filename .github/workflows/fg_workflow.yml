@@ -63,4 +63,4 @@ jobs:
 
             sudo docker pull holodov/foodgram
             sudo docker stop $(sudo docker ps -a -q)
-            sudo docker-compose -f foodgram-project/docker-compose.yaml up -d --build
+            sudo docker-compose -f foodgram-project/foodgram/docker-compose.yaml up -d --build
