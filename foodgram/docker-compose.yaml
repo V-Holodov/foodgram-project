@@ -8,7 +8,7 @@ services:
       - ./.env
 
   web:
-    image: holodov/yamdb_web:v1
+    image: holodov/foodgram:latest
     restart: always
     volumes:
       - static_value:/code/static/
