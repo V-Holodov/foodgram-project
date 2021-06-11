@@ -5,6 +5,7 @@ from .forms import CreationForm
 
 
 class SignUp(CreateView):
+    """User registration."""
     form_class = CreationForm
     success_url = reverse_lazy("login")
     template_name = "signup.html"

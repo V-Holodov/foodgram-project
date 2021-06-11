@@ -5,11 +5,13 @@ register = template.Library()
 
 @register.filter
 def addclass(field, css):
+    """Outputs css styles to the template."""
     return field.as_widget(attrs={"class": css})
 
 
 @register.filter
 def changing_recipes(more_recipes):
+    """Changing the word depending on the numeral."""
     more_recipes -= 3
     if more_recipes in [11, 12, 13, 14]:
         return 'рецептов'
@@ -23,6 +25,7 @@ def changing_recipes(more_recipes):
 
 @register.simple_tag
 def tags_links(request, tag, all_tags):
+    """Collecting tags from request parameters."""
     tags = request.GET.getlist('tags')
     if tags:
         new_request = request.GET.copy()
@@ -43,6 +46,7 @@ def tags_links(request, tag, all_tags):
 
 @register.simple_tag
 def add_tags_to_pagination(request, param, value):
+    """Adding a tag during pagination."""
     new_request = request.GET.copy()
     new_request[param] = value
 
@@ -51,6 +55,7 @@ def add_tags_to_pagination(request, param, value):
 
 @register.filter
 def is_selected(request, tag):
+    """Checking for tags."""
     tags = request.GET.getlist('tags')
     if tags:
         return tag in tags

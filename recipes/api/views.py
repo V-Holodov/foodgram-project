@@ -13,6 +13,7 @@ BAD_RESPONSE = JsonResponse(
 
 
 class CreateDestroyBase(APIView):
+    """Base class to create and delete."""
     permission_classes = [permissions.IsAuthenticated, ]
     model = None
     field = None
@@ -36,24 +37,25 @@ class CreateDestroyBase(APIView):
 
 
 class CreateDestroyFavor(CreateDestroyBase):
-    """Adding and deleting a recipe to the user's favorites list"""
+    """Adding and deleting a recipe to the user's favorites list."""
     model = FavorRecipe
     field = 'recipe_id'
 
 
 class PurchasesView(CreateDestroyBase):
-    """Adding and deleting a recipe to the user's shoplist"""
+    """Adding and deleting a recipe to the user's shoplist."""
     model = Purchase
     field = 'recipe_id'
 
 
 class CreateDestroyFollow(CreateDestroyBase):
-    """The functionality of following the author of recipes"""
+    """The functionality of following the author of recipes."""
     model = Follow
     field = 'idol_id'
 
 
 class IngredientView(APIView):
+    """Autofill the name of the ingredient when creating a recipe."""
     def get(self, request):
         ingredients = Ingredient.objects.filter(
             name__startswith=request.query_params.get('query')

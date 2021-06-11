@@ -122,6 +122,7 @@ def recipe_detail(request, recipe_id):
 
 
 def follow_list(request):
+    """Displaying a list of following authors."""
     user = request.user
     latest = models.User.objects.filter(
         mentor__user=user).annotate(
@@ -160,6 +161,7 @@ def profile_unfollow(request, username):
 
 
 def get_ingredients(request, recipe):
+    """Processing the transferred ingredients to save the recipe."""
     ingredients = {}
     for key, value in request.POST.items():
         if key.startswith('nameIngredient'):
@@ -180,7 +182,7 @@ def get_ingredients(request, recipe):
 @login_required
 @csrf_protect
 def new_recipe(request):
-    """Creating a new recipe by an authorized user"""
+    """Creating a new recipe by an authorized user."""
     form = forms.RecipeForm(
         request.POST or None,
         files=request.FILES or None
@@ -202,6 +204,7 @@ def new_recipe(request):
 @login_required
 @csrf_protect
 def recipe_edit(request, recipe_id):
+    """Editing a new recipe by an authorized user."""
     recipe = get_object_or_404(models.Recipe, id=recipe_id)
     form = forms.RecipeForm(
         request.POST or None,
@@ -225,6 +228,7 @@ def recipe_edit(request, recipe_id):
 
 @login_required
 def favor_recipes(request):
+    """Displays the user's favorite recipes."""
     user = request.user
     latest = models.Recipe.objects.annotate(
         is_favorite=Exists(
@@ -250,6 +254,7 @@ def favor_recipes(request):
 
 @login_required
 def shop_recipes(request):
+    """Displays the user's shopping list."""
     user = request.user
     recipes = models.Recipe.objects.filter(shop_recipe__user=user)
     paginator = Paginator(recipes, PAGINATOR_SIZE)
@@ -263,6 +268,7 @@ def shop_recipes(request):
 
 
 def download_shoplist(request):
+    """Uploading a shopping list to a text document."""
     filename = "shoplist.txt"
     recipes = models.Recipe.objects.filter(shop_recipe__user=request.user)
     ingredients = models.IngredientRecipe.objects.filter(
@@ -277,6 +283,7 @@ def download_shoplist(request):
 
 
 def page_not_found(request, exception):
+    """Page 404 output."""
     return render(
         request,
         "misc/404.html",
@@ -286,4 +293,5 @@ def page_not_found(request, exception):
 
 
 def server_error(request):
+    """Page 500 output."""
     return render(request, "misc/500.html", status=500)

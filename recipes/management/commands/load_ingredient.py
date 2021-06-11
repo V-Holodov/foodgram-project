@@ -10,6 +10,7 @@ CSV_FILE_PATH = os.path.join(BASE_DIR, 'ingredients.csv')
 
 
 class Command(BaseCommand):
+    """Loads the ingredients into the database from a csv file."""
     help = 'Load ingredient'
 
     def handle(self, *args, **kwargs):

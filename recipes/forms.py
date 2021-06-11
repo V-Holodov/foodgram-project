@@ -4,7 +4,7 @@ from . import models
 
 
 class RecipeForm(forms.ModelForm):
-
+    """The form for creating a recipe."""
     def __init__(self, *args, **kwargs):
         super(RecipeForm, self).__init__(*args, **kwargs)
         self.fields['ingredient'].required = False

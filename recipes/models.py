@@ -10,6 +10,7 @@ User = get_user_model()
 
 
 class Ingredient(models.Model):
+    """The model of the ingredient."""
     name = models.CharField(
         verbose_name='Название ингредиента',
         max_length=200
@@ -28,6 +29,7 @@ class Ingredient(models.Model):
 
 
 class RecipeQuerySet(models.QuerySet):
+    """Annotate with favorite flag."""
     def with_is_recipe(self, user_id: Optional[int]):
         return self.annotate(
             is_favorite=Exists(
@@ -87,6 +89,7 @@ class Recipe(models.Model):
 
 
 class IngredientRecipe(models.Model):
+    """An intermediate model for linking a recipe and an ingredient."""
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -134,6 +137,7 @@ class FavorRecipe(models.Model):
 
 
 class Purchase(models.Model):
+    """The user's shopping cart."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
