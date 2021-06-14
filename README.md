@@ -73,5 +73,5 @@ docker-compose exec web python manage.py load_ingredient
 9. `ingredients.csv` - ингредиенты для заполнения базы данных.
 
 ## Об авторе
-Проект подготовлен выпускником бэкенд-факультета Яндекс-Практикума [https://www.linkedin.com/in/v-holodov/] (Виталием Холодовым).
+Проект подготовлен выпускником бэкенд-факультета Яндекс-Практикума [Виталием Холодовым ](https://www.linkedin.com/in/v-holodov/).
 
